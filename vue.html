@@ -4,13 +4,18 @@
 	<meta charset="UTF-8">
 	<title>vue</title>
 	<script src="https://unpkg.com/vue/dist/vue.js"></script>
+	<link href='vue_practice.css' rel='stylesheet' type='text/css'>
+
 
 </head>
 <body>
-<div  v-if="seen">
-	<div id="hello" v-bind:title="bindTitle">{{hello}}</div>
-	
-</div>
-	<script src="1.js"></script>
+	<div id="hello" v-if="seen">
+		<div v-bind:title="bindTitle">{{hello}}</div>
+		<ul v-for="(item,key) in namesArr" >
+			<li data-id="item.id" v-on:click="showAlert(key)">{{key+1}}.{{item.name}}</li>
+		</ul>	
+	</div>
+
+	<script src="vue_practice.js"></script>
 </body>
 </html>
