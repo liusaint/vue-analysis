@@ -14,6 +14,9 @@
 		<ul v-for="(item,key) in namesArr" >
 			<li data-id="item.id" v-on:click="showAlert(key)">{{key+1}}.{{item.name}}</li>
 		</ul>	
+		<input type="text" v-model="input_name">
+
+		
 	</div>
 
 	<script src="vue_practice.js"></script>

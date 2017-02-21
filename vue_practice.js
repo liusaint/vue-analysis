@@ -4,6 +4,7 @@ var a = new Vue({
 		hello: 'hello,world',
 		bindTitle:'bindTitle',
 		seen:'false',
+		input_name:'输入框的内容',
 		namesArr:[
 		{
 			id:1,
@@ -13,7 +14,8 @@ var a = new Vue({
 			id:2,
 			name:'名字2'
 		}
-		]
+		],
+		nameCheckedId:1
 	},
 	methods:{
 		showAlert:function(nameId){
