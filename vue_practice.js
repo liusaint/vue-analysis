@@ -1,7 +1,7 @@
 Vue.component('com1', {
-	props: ['p_user','p_input_name','showAlert'],
+	props: ['p_user','p_input_name','p_show_alert'],
 	template: 
-	'<ul><li  v-for="(item,key) in p_user"  :data-id="item.id" v-on:click="showAlert(key)">{{key+1}}.{{item.name}}{{p_input_name}}</li></ul>'
+	'<ul class="com1">子组件com1<li  v-for="(item,key) in p_user"  :data-id="item.id" v-on:click="p_show_alert(key)">{{key+1}}.{{item.name}}{{p_input_name}}</li><input type="text" v-model="p_input_name" /></ul>'
 })
 
 
@@ -49,5 +49,6 @@ a.usersArr.push(
 //组件
 //组件应该先调用
 //v-for不能用于根元素。
+//子组件的input绑定到父组件中的值。会出现子组件中对值的修改影响不到父组件。但是父组件中对值的修改影响得到子组件　。会报错。如何实现父子组件中的某个值的共同绑定的影响呢？
 
 
