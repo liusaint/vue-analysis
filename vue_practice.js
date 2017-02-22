@@ -14,8 +14,10 @@ var a = new Vue({
 		input_name:'输入框的内容',
 		nameCheckedId:1,
 		radioVal:1,
+		checkboxArr:[],
 		rawHtml:'{{input_name}}',
-		wordA:'abcde',	
+		wordA:'abcde',
+
 		usersArr:[
 		{
 			id:1,
@@ -108,3 +110,7 @@ a.usersArr.push(
 // 事件修饰符。按键修饰符（keycode与别名）。
 // 
 // vue中的事件都是在当前视图的viewModel上的
+// 
+// 表单　
+//　修饰符　v-model.lazy  .number .trim
+//　自定义input类型
