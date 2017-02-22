@@ -3,7 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<title>vue</title>
-	<script src="https://unpkg.com/vue/dist/vue.js"></script>
+	
 	<link href='vue_practice.css' rel='stylesheet' type='text/css'>
 
 
@@ -11,14 +11,26 @@
 <body>
 	<div id="hello" v-if="seen">
 		<div v-bind:title="bindTitle">{{hello}}</div>
-		<ul v-for="(item,key) in namesArr" >
-			<li data-id="item.id" v-on:click="showAlert(key)">{{key+1}}.{{item.name}}</li>
+		<ul>
+			<li  v-for="(item,key) in usersArr"  :data-id="item.id" v-on:click="showAlert(key)">{{key+1}}.{{item.name}}</li>
 		</ul>	
+
 		<input type="text" v-model="input_name">
-
+		<br>
 		
-	</div>
+		<select name="select_name" :haha="nameCheckedId" v-model="nameCheckedId">
+			<option  v-for="user in usersArr" :value="user.id" v-bind:user-id="user.id">{{user.name}}
+			</option>
+		</select>
+		<br>
+		<div>
+			<input type="radio" name="aa" id="" value = "1" v-model="radioVal">1
+			<input type="radio" name="aa" id="" value = "2" v-model="radioVal">2
+		</div>
 
+
+	</div>
+	<script src="https://unpkg.com/vue/dist/vue.js"></script>
 	<script src="vue_practice.js"></script>
 </body>
 </html>

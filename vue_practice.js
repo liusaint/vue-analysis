@@ -5,7 +5,9 @@ var a = new Vue({
 		bindTitle:'bindTitle',
 		seen:'false',
 		input_name:'输入框的内容',
-		namesArr:[
+		nameCheckedId:1,
+		radioVal:1,		
+		usersArr:[
 		{
 			id:1,
 			name:'名字1'
@@ -14,23 +16,26 @@ var a = new Vue({
 			id:2,
 			name:'名字2'
 		}
-		],
-		nameCheckedId:1
+		]		
 	},
 	methods:{
 		showAlert:function(nameId){
 			//注意这里的this是指的a
-			console.log(this.namesArr[nameId||0]);
-			console.log(this.$data.namesArr[nameId||0]);
+			console.log(this.usersArr[nameId||0]);
+			console.log(this.$data.usersArr[nameId||0]);
 		}
 	}
 })
 
-a.namesArr.push(
+a.usersArr.push(
 {
 	id:3,
 	name:'名字3'
 })
 
-//在属性中可以直接访问变量，不用打双括号？
+//在属性中可以直接访问变量，不用打双括号？应该是在vue认识的一些属性里。
+//v-bind:a="user.id" 类似这样。
+//value="{{a}}"这种就不要用了
+
 //获取当前遍历的索引值。
+//
