@@ -13,7 +13,9 @@ var a = new Vue({
 		seen:'false',//这个属性刚开始好像不起作用？
 		input_name:'输入框的内容',
 		nameCheckedId:1,
-		radioVal:1,		
+		radioVal:1,
+		rawHtml:'{{input_name}}',
+		wordA:'abcde',	
 		usersArr:[
 		{
 			id:1,
@@ -30,6 +32,17 @@ var a = new Vue({
 			//注意这里的this是指的a
 			console.log(this.usersArr[nameId||0]);
 			console.log(this.$data.usersArr[nameId||0]);
+		}
+	},
+	filters:{
+		big:function(value){
+			if(!value) return '';
+			return value.toUpperCase() || '';
+		}
+	},
+	computed:{
+		computedBig:function(){
+			return this.wordA.toUpperCase();
 		}
 	}
 })
@@ -50,5 +63,48 @@ a.usersArr.push(
 //组件应该先调用
 //v-for不能用于根元素。
 //子组件的input绑定到父组件中的值。会出现子组件中对值的修改影响不到父组件。但是父组件中对值的修改影响得到子组件　。会报错。如何实现父子组件中的某个值的共同绑定的影响呢？
+//$开头的属性。
+//为什么说vue不完全是mvvm
+//生命周期。能自已讲出来画出来吗？
+//v-once
+//v-html
+//v-bind:disabled
+//指令。指令参数。指令修饰符
+//过滤器　filters;{{a:filter1}}
+//缩写　v-bind:id  :id  v-on:click @click
+//计算属性与缓存。
+//计算属性与watched的对比　
+//计算属性默认只有 getter ，不过在需要时你也可以提供一个 setter
+//watch与异步操作？
+//class与bind class共存。　<div class="static" v-bind:class="{ active: isActive, 'text-danger': hasError }"> </div> 
+//v-bind:class="classObject"　也可以使用绑定的属性与计算属性
 
-
+//数组样式　<div v-bind:class="[isActive ? activeClass : '', errorClass]">
+//<div v-bind:class="[{ active: isActive }, errorClass]">
+//v-bind:class="['a','b']"
+//用在组件上的话会传递到下面元素的根元素上
+//v-bind:style。自动增加style前缀
+//
+//
+//v-if v-else-if v-else
+//<template v-if="ok">
+//
+//Vue 尝试尽可能高效的渲染元素，通常会复用已有元素而不是从头开始渲染。
+//使用key控制是否重新渲染
+//
+//v-show与v-if
+//v-show只是修改display
+//v-if的惰性？
+//
+//template 不会渲染出来。很多时候可以用来html块。
+//
+// v-for与数字。 <span v-for="n in 10">{{ n }}</span>　重复多次文档。
+// 
+// event
+// 可传入$event访问原生的事件对象。
+// 但更好的方式是：methods 只有纯粹的数据逻辑，而不是去处理 DOM 事件细节。　　于是产生了修饰符
+// .stop .prevent .capture .self .once 
+// <div v-on:click.self="doThat">...</div>
+// 事件修饰符。按键修饰符（keycode与别名）。
+// 
+// vue中的事件都是在当前视图的viewModel上的

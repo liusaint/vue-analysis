@@ -9,10 +9,12 @@
 
 </head>
 <body>
-	<div id="hello" v-if="seen">
+	<div id="hello">
+	<div v-if="seen">seen 可见</div>
+	<div v-else>seen 不可见</div>
 		<div v-bind:title="bindTitle">{{hello}}</div>
 		<ul>
-			<li  v-for="(item,key) in usersArr"  :data-id="item.id" v-on:click="showAlert(key)">{{key+1}}.{{item.name}}</li>
+			<li  v-for="(item,key) in usersArr"  :data-id="'a'+item.id" v-on:click="showAlert(key)">{{key+1}}.{{item.name}}</li>
 		</ul>	
 
 		<input type="text" v-model="input_name">
@@ -27,8 +29,25 @@
 			<input type="radio" name="aa" id="" value = "1" v-model="radioVal">1
 			<input type="radio" name="aa" id="" value = "2" v-model="radioVal">2
 		</div>
-		<com1 v-bind:p_show_alert="showAlert" v-bind:p_user="usersArr" v-bind:p_input_name="input_name"></com1>
 
+		<div v-once>{{input_name}}</div>
+		<div v-html="rawHtml" v-bind:class="['a','b']"></div>
+
+		<div>{{wordA|big}}//使用过滤器实现</div>
+		<div>{{computedBig}}//使用计算属性实现</div>
+
+
+
+
+
+
+
+
+
+
+
+
+		<com1 v-bind:p_show_alert="showAlert" v-bind:p_user="usersArr" v-bind:p_input_name="input_name"></com1>
 	</div>
 
 	<script src="https://unpkg.com/vue/dist/vue.js"></script>
