@@ -1,9 +1,16 @@
+Vue.component('com1', {
+	props: ['p_user','p_input_name','showAlert'],
+	template: 
+	'<ul><li  v-for="(item,key) in p_user"  :data-id="item.id" v-on:click="showAlert(key)">{{key+1}}.{{item.name}}{{p_input_name}}</li></ul>'
+})
+
+
 var a = new Vue({
 	el: '#hello',
 	data: {
 		hello: 'hello,world',
 		bindTitle:'bindTitle',
-		seen:'false',
+		seen:'false',//这个属性刚开始好像不起作用？
 		input_name:'输入框的内容',
 		nameCheckedId:1,
 		radioVal:1,		
@@ -39,3 +46,8 @@ a.usersArr.push(
 
 //获取当前遍历的索引值。
 //
+//组件
+//组件应该先调用
+//v-for不能用于根元素。
+
+
