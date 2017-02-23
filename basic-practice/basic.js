@@ -1,7 +1,7 @@
 Vue.component('com1', {
 	props: ['p_user','p_input_name','p_show_alert'],
 	template: 
-	'<ul class="com1">子组件com1<li  v-for="(item,key) in p_user"  :data-id="item.id" v-on:click="p_show_alert(key)">{{key+1}}.{{item.name}}{{p_input_name}}</li><input type="text" v-model="p_input_name" v-on:keyup="tellParent" /></ul>',
+	'<ul class="com1">子组件com1<li  v-for="(item,key) in p_user"  :data-id="item.id" v-on:click="p_show_alert(key)">{{key+1}}.{{item.name}}{{p_input_name}}</li><input type="text" v-model="p_input_name" v-on:input="tellParent" /></ul>',
 	methods:{
 		tellParent:function(){
 			this.$emit('changeinput',this.p_input_name);	
