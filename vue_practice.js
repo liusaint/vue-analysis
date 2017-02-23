@@ -1,7 +1,12 @@
 Vue.component('com1', {
 	props: ['p_user','p_input_name','p_show_alert'],
 	template: 
-	'<ul class="com1">子组件com1<li  v-for="(item,key) in p_user"  :data-id="item.id" v-on:click="p_show_alert(key)">{{key+1}}.{{item.name}}{{p_input_name}}</li><input type="text" v-model="p_input_name" /></ul>'
+	'<ul class="com1">子组件com1<li  v-for="(item,key) in p_user"  :data-id="item.id" v-on:click="p_show_alert(key)">{{key+1}}.{{item.name}}{{p_input_name}}</li><input type="text" v-model="p_input_name" v-on:keyup="tellParent" /></ul>',
+	methods:{
+		tellParent:function(){
+			this.$emit('changeinput',this.p_input_name);	
+		}
+	}
 })
 
 
@@ -34,6 +39,9 @@ var a = new Vue({
 			//注意这里的this是指的a
 			console.log(this.usersArr[nameId||0]);
 			console.log(this.$data.usersArr[nameId||0]);
+		},
+		getChildMsg:function(msg){
+			this.input_name = msg;
 		}
 	},
 	filters:{
@@ -114,3 +122,9 @@ a.usersArr.push(
 // 表单　
 //　修饰符　v-model.lazy  .number .trim
 //　自定义input类型
+//　
+//　
+//　组件
+//　父子通信。子父通信。props与自定义事件。
+//　函数名，不带括号。
+//　触发自定义事件可以带参数。
