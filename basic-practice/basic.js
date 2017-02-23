@@ -15,7 +15,7 @@ var a = new Vue({
 	data: {
 		hello: 'hello,world',
 		bindTitle:'bindTitle',
-		seen:'false',//这个属性刚开始好像不起作用？
+		seen:'true',//这个属性刚开始好像不起作用？
 		input_name:'输入框的内容',
 		nameCheckedId:1,
 		radioVal:1,
