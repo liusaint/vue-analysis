@@ -7,11 +7,17 @@
 </head>
 <body>
 	<div id="p1">
-		<hello></hello>
+		<h5>title</h5>
+
+		<hello><p slot="slot1">这里的东西会放在slot里面,slot1</p><p slot="slot2">这里的东西会放在slot里面,slot2</p></hello>
 		<partcom></partcom>
+
+		<div>动态组件</div>
+		<component v-bind:is="currentView">
+			<!-- 组件在 vm.currentview 变化时改变！ -->
+		</component>
+
 	</div>
-
-
 	<script src="https://unpkg.com/vue/dist/vue.js"></script>
 	<script src="component.js"></script>
 </body>
