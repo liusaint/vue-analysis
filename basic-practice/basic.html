@@ -19,6 +19,8 @@
 
 		<input type="text" v-model="input_name">
 		<br>
+		<input type="text" v-model="inputObj.input_name">
+		<br>
 		
 		<select name="select_name" :haha="nameCheckedId" v-model="nameCheckedId">
 			<option  v-for="user in usersArr" :value="user.id" v-bind:user-id="user.id">{{user.name}}
@@ -54,7 +56,7 @@
 
 
 
-		<com1 v-bind:p_show_alert="showAlert" v-bind:p_user="usersArr" v-bind:p_input_name="input_name" v-on:changeinput="getChildMsg"></com1>
+		<com1 v-bind:p_show_alert="showAlert" v-bind:p_user="usersArr" v-bind:p_input_name="input_name" v-on:changeinput="getChildMsg" :input_obj="inputObj"></com1>
 	</div>
 
 	<script src="https://unpkg.com/vue/dist/vue.js"></script>

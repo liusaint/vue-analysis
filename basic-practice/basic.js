@@ -1,7 +1,7 @@
 Vue.component('com1', {
-	props: ['p_user','p_input_name','p_show_alert'],
+	props: ['p_user','p_input_name','p_show_alert','input_obj'],
 	template: 
-	'<ul class="com1">子组件com1<li  v-for="(item,key) in p_user"  :data-id="item.id" v-on:click="p_show_alert(key)">{{key+1}}.{{item.name}}{{p_input_name}}</li><input type="text" v-model="p_input_name" v-on:input="tellParent" /></ul>',
+	'<ul class="com1">子组件com1<li  v-for="(item,key) in p_user"  :data-id="item.id" v-on:click="p_show_alert(key)">{{key+1}}.{{item.name}}{{p_input_name}}</li><input type="text" v-model="p_input_name" v-on:input="tellParent" /><br /><input type="text" v-model="input_obj.input_name" /></ul>',
 	methods:{
 		tellParent:function(){
 			this.$emit('changeinput',this.p_input_name);	
@@ -17,11 +17,15 @@ var a = new Vue({
 		bindTitle:'bindTitle',
 		seen:'true',//这个属性刚开始好像不起作用？
 		input_name:'输入框的内容',
+		inputObj:{
+			input_name:'引用值的修改:这个是inputObj中的一个值'
+		},
 		nameCheckedId:1,
 		radioVal:1,
 		checkboxArr:[],
 		rawHtml:'{{input_name}}',
 		wordA:'abcde',
+
 
 		usersArr:[
 		{
