@@ -1,7 +1,7 @@
 Vue.component('com1', {
 	props: ['p_user','p_input_name','p_show_alert','input_obj'],
 	template: 
-	'<ul class="com1">子组件com1<li  v-for="(item,key) in p_user"  :data-id="item.id" v-on:click="p_show_alert(key)">{{key+1}}.{{item.name}}{{p_input_name}}</li><input type="text" v-model="p_input_name" v-on:input="tellParent" /><br /><input type="text" v-model="input_obj.input_name" /></ul>',
+	'<ul class="com1">子组件com1<li  v-for="(item,key) in p_user"  :data-id="item.id" v-on:click="p_show_alert(key)">{{key+1}}.{{item.name}}{{p_input_name}}</li><input type="text" v-model="p_input_name" v-on:input="tellParent" placeholder="这里通过事件把消息传递给父组件"/><br /><input type="text" v-model="input_obj.input_name" placeholder="这里通过引用类型中的值的修改" /></ul>',
 	methods:{
 		tellParent:function(){
 			this.$emit('changeinput',this.p_input_name);	
@@ -132,3 +132,4 @@ a.usersArr.push(
 //　父子通信。子父通信。props与自定义事件。
 //　函数名，不带括号。
 //　触发自定义事件可以带参数。
+//　a.$refs.com1.input_obj.input_name = 1 //ref的运用。
