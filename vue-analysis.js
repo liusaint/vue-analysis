@@ -5,7 +5,9 @@
  */
 (function(global, factory) {
 	//对于各种环境。各种模块模式的兼容处理。
+	//es6?
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+		//amd规范的环境。定义模块需要define(fn);
 		typeof define === 'function' && define.amd ? define(factory) :
 		(global.Vue = factory());
 }(this, (function() {
