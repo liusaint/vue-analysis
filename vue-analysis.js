@@ -66,11 +66,14 @@
 
 	/**
 	 * Check if a tag is a built-in tag.
+	 * 判断tag是否built-in tag的函数
 	 */
+	
 	var isBuiltInTag = makeMap('slot,component', true);
 
 	/**
 	 * Remove an item from an array
+	 * 删除数组中的第一个等于item的。
 	 */
 	function remove$1(arr, item) {
 		if (arr.length) {
@@ -83,6 +86,7 @@
 
 	/**
 	 * Check whether the object has the property.
+	 * 判断object自己的属性中是否有某个key
 	 */
 	var hasOwnProperty = Object.prototype.hasOwnProperty;
 
@@ -92,6 +96,7 @@
 
 	/**
 	 * Check if value is primitive
+	 * 判断是否原始值 直接用typeof
 	 */
 	function isPrimitive(value) {
 		return typeof value === 'string' || typeof value === 'number'
@@ -99,6 +104,7 @@
 
 	/**
 	 * Create a cached version of a pure function.
+	 * 创建一个缓存版本的纯函数。以参数为缓存的key
 	 */
 	function cached(fn) {
 		var cache = Object.create(null);
