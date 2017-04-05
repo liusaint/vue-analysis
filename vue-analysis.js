@@ -38,6 +38,11 @@
 	 * Make a map and return a function for checking if a key
 	 * is in that map.
 	 */
+	/* 根据str:'a,b,c'生成map:{a:true,b:true,c:true}。然后返回一个函数用来判断key是否在map中。
+	如果expectsLowerCase为true.会返回把key转成小写再判断。
+	var makeMapFn = makeMap('a,b,c');
+	console.log(makeMapFn('a'));
+	console.log(makeMapFn('A')) */
 	function makeMap(
 		str,
 		expectsLowerCase
@@ -47,12 +52,17 @@
 		for (var i = 0; i < list.length; i++) {
 			map[list[i]] = true;
 		}
+
 		return expectsLowerCase ? function(val) {
 			return map[val.toLowerCase()];
 		} : function(val) {
 			return map[val];
 		}
 	}
+
+
+
+
 
 	/**
 	 * Check if a tag is a built-in tag.
