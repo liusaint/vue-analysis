@@ -108,7 +108,9 @@
 	 * Object.create()实现类似继承。
 	 * 注意 Object.create(null);生成的是一个没有原型链的对象。
 	 * Object.create(Object.prototype)相当于字面量的{};
-	 * 这里为什么使用这种而不是直接使用{}呢？
+	 * 这里为什么使用这种而不是直接使用{}呢？生成一个纯净的对象。不会担心原型链中的属性如toString。
+	 * 如果要检查是否有某key。可以借用Object.prototype中的方法来处理，使用call。
+	 * http://stackoverflow.com/questions/15518328/creating-js-object-with-object-createnull
 	 */
 	function cached(fn) {
 		var cache = Object.create(null);
