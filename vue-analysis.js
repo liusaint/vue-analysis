@@ -105,6 +105,10 @@
 	/**
 	 * Create a cached version of a pure function.
 	 * 创建一个缓存版本的纯函数。以参数为缓存的key
+	 * Object.create()实现类似继承。
+	 * 注意 Object.create(null);生成的是一个没有原型链的对象。
+	 * Object.create(Object.prototype)相当于字面量的{};
+	 * 这里为什么使用这种而不是直接使用{}呢？
 	 */
 	function cached(fn) {
 		var cache = Object.create(null);
