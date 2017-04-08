@@ -300,64 +300,78 @@
 	var config = {
 		/**
 		 * Option merge strategies (used in core/util/options)
+		 * 准备个单纯的对象。用于合并其他的配置。
 		 */
 		optionMergeStrategies: Object.create(null),
 
 		/**
 		 * Whether to suppress warnings.
+		 * 是否抑制警告。
 		 */
 		silent: false,
 
 		/**
 		 * Whether to enable devtools
+		 * 是否使用devtools
 		 */
 		devtools: "development" !== 'production',
 
 		/**
 		 * Error handler for watcher errors
+		 * 错误处理???
 		 */
 		errorHandler: null,
 
 		/**
 		 * Ignore certain custom elements
+		 * 忽略某些自己定义的元素。
 		 */
 		ignoredElements: [],
 
 		/**
 		 * Custom user key aliases for v-on
+		 * 键盘值的别名。空对象。
 		 */
 		keyCodes: Object.create(null),
 
 		/**
 		 * Check if a tag is reserved so that it cannot be registered as a
 		 * component. This is platform-dependent and may be overwritten.
+		 * 判断一个标签是预留的，是就不能注册成一个组件。
+		 * 依赖于平台，可能会被重写。
 		 */
 		isReservedTag: no,
 
 		/**
 		 * Check if a tag is an unknown element.
 		 * Platform-dependent.
+		 * 判断一个标签是不是一个未知元素。
+		 * 依赖平台。
 		 */
 		isUnknownElement: no,
 
 		/**
 		 * Get the namespace of an element
+		 * 获取一个元素的命名空间
 		 */
 		getTagNamespace: noop,
 
 		/**
 		 * Parse the real tag name for the specific platform.
+		 * 为具体的平台解析实际标签名
 		 */
 		parsePlatformTagName: identity,
 
 		/**
 		 * Check if an attribute must be bound using property, e.g. value
 		 * Platform-dependent.
+		 * 判断一个属性是不是必须使用属性绑定。如value。
 		 */
 		mustUseProp: no,
 
 		/**
 		 * List of asset types that a component can own.
+		 * 组件可以拥有的资产类型列表
 		 */
 		_assetTypes: [
 			'component',
@@ -367,6 +381,7 @@
 
 		/**
 		 * List of lifecycle hooks.
+		 * 生命周期的钩子。
 		 */
 		_lifecycleHooks: [
 			'beforeCreate',
@@ -383,6 +398,7 @@
 
 		/**
 		 * Max circular updates allowed in a scheduler flush cycle.
+		 * 一个调度程序刷新周期的允许的最大循环更新
 		 */
 		_maxUpdateCount: 100
 	};
@@ -391,11 +407,18 @@
 
 	/**
 	 * Check if a string starts with $ or _
+	 * 判断字符串是否以$或_开头。
+	 * 0x24 $ 十六进制 
+	 * 0x5F _
+	 * charCodeAt() 方法可返回指定位置的字符的 Unicode 编码
+	 * ???为啥不直接用charAt和$和_呢？
 	 */
 	function isReserved(str) {
 		var c = (str + '').charCodeAt(0);
 		return c === 0x24 || c === 0x5F
 	}
+
+
 
 	/**
 	 * Define a property.
