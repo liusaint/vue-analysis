@@ -122,6 +122,8 @@
 
 	/**
 	 * Camelize a hyphen-delimited string.
+	 * 将连字号的string转化成驼峰法表示。
+	 * 如a-abc-deb转换成aAbcDeb;
 	 */
 	var camelizeRE = /-(\w)/g;
 	var camelize = cached(function(str) {
@@ -130,8 +132,11 @@
 		})
 	});
 
+
+
 	/**
 	 * Capitalize a string.
+	 * 将一个字符串首字母大写
 	 */
 	var capitalize = cached(function(str) {
 		return str.charAt(0).toUpperCase() + str.slice(1)
@@ -139,6 +144,8 @@
 
 	/**
 	 * Hyphenate a camelCase string.
+	 * 将驼峰法转换成连字号法。
+	 * console.log('ABCD'.replace(hyphenateRE,'$1-$2'))
 	 */
 	var hyphenateRE = /([^-])([A-Z])/g;
 	var hyphenate = cached(function(str) {
@@ -146,23 +153,29 @@
 			.replace(hyphenateRE, '$1-$2')
 			.replace(hyphenateRE, '$1-$2')
 			.toLowerCase()
+			//这里用了两次replace。是用在ABCD这种的转换。A-BC-D
 	});
+
 
 	/**
 	 * Simple bind, faster than native
+	 * 简单的bInd，比原生的快。
 	 */
 	function bind$1(fn, ctx) {
 		function boundFn(a) {
 			var l = arguments.length;
+			//两个三目运算
 			return l ? l > 1 ? fn.apply(ctx, arguments) : fn.call(ctx, a) : fn.call(ctx)
 		}
 		// record original fn length
+		// 记住原来的fn的length。 因为boundFn.length == 1;
 		boundFn._length = fn.length;
 		return boundFn
 	}
 
 	/**
 	 * Convert an Array-like object to a real Array.
+	 * 类数组转换成数组
 	 */
 	function toArray(list, start) {
 		start = start || 0;
@@ -176,6 +189,7 @@
 
 	/**
 	 * Mix properties into target object.
+	 * 混合属性。会覆盖原来有的。
 	 */
 	function extend(to, _from) {
 		for (var key in _from) {
@@ -188,6 +202,7 @@
 	 * Quick object check - this is primarily used to tell
 	 * Objects from primitive values when we know the value
 	 * is a JSON-compliant type.
+	 * 简单的检测是否object。排除null。
 	 */
 	function isObject(obj) {
 		return obj !== null && typeof obj === 'object'
@@ -196,6 +211,7 @@
 	/**
 	 * Strict object type check. Only returns true
 	 * for plain JavaScript objects.
+	 * 严格的object类型检测判断。
 	 */
 	var toString = Object.prototype.toString;
 	var OBJECT_STRING = '[object Object]';
@@ -206,6 +222,7 @@
 
 	/**
 	 * Merge an Array of Objects into a single Object.
+	 * 将数组中的对象整合到一个对象中。
 	 */
 	function toObject(arr) {
 		var res = {};
@@ -219,11 +236,13 @@
 
 	/**
 	 * Perform no operation.
+	 * 不执行操作。空函数。
 	 */
 	function noop() {}
 
 	/**
 	 * Always return false.
+	 * 返回false. no()===false
 	 */
 	var no = function() {
 		return false;
@@ -231,6 +250,7 @@
 
 	/**
 	 * Return same value
+	 * 返回相同的值。
 	 */
 	var identity = function(_) {
 		return _;
@@ -238,6 +258,7 @@
 
 	/**
 	 * Generate a static keys string from compiler modules.
+	 * ???
 	 */
 	function genStaticKeys(modules) {
 		return modules.reduce(function(keys, m) {
@@ -248,6 +269,7 @@
 	/**
 	 * Check if two values are loosely equal - that is,
 	 * if they are plain objects, do they have the same shape?
+	 * 判断两个简单对象是否一样。是一样，不是相等。
 	 */
 	function looseEqual(a, b) {
 		var isObjectA = isObject(a);
@@ -261,6 +283,9 @@
 		}
 	}
 
+	/**
+	 * 判断是给的值在数组中的序号。使用上面的宽松相等。	
+	 */
 	function looseIndexOf(arr, val) {
 		for (var i = 0; i < arr.length; i++) {
 			if (looseEqual(arr[i], val)) {
