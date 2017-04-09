@@ -508,12 +508,14 @@
 	/* istanbul ignore next */
 	//判断是否原生函数。
 	//原生函数toString()后函数体中是[native code]
+	//https://zhuanlan.zhihu.com/p/25552616
 	function isNative(Ctor) {
 		return /native code/.test(Ctor.toString())
 	}
 
 	/**
 	 * Defer a task to execute it asynchronously.
+	 * 延迟任务以异步执行
 	 */
 	var nextTick = (function() {
 		var callbacks = [];
@@ -522,6 +524,7 @@
 
 		function nextTickHandler() {
 			pending = false;
+			//复制数组。
 			var copies = callbacks.slice(0);
 			callbacks.length = 0;
 			for (var i = 0; i < copies.length; i++) {
@@ -536,6 +539,12 @@
 		// completely stops working after triggering a few times... so, if native
 		// Promise is available, we will use it:
 		/* istanbul ignore if */
+		//nextTick与setTimeout(fn,0)的区别。
+		//http://www.cnblogs.com/lengyuhong/archive/2013/03/31/2987745.html
+		//https://www.zhihu.com/question/23028843/answer/34597367
+		//nextTick是插入事件队列第一个，setTimeout是最后一个。
+		//http://zhihu.com/question/55364497/answer/144215284
+		//这一部分涉及到promise。nextTick等知识.
 		if (typeof Promise !== 'undefined' && isNative(Promise)) {
 			var p = Promise.resolve();
 			var logError = function(err) {
