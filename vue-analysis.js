@@ -422,6 +422,7 @@
 
 	/**
 	 * Define a property.
+	 * 定义一个属性。
 	 */
 	function def(obj, key, val, enumerable) {
 		Object.defineProperty(obj, key, {
@@ -434,7 +435,14 @@
 
 	/**
 	 * Parse simple path.
+	 * 解析简单的路径
+	 * var funabc = parsePath('a.b.c');
+	 * var testObj = {a:{b:{c:1}}};
+	 * console.log(funabc(testObj)) //1
+	 *
+	 * 这个正则表达式。排除了能组成合法变量名的值。除了.号。
 	 */
+
 	var bailRE = /[^\w.$]/;
 
 	function parsePath(path) {
@@ -454,13 +462,17 @@
 		}
 	}
 
-	/*  */
+
+
+	/* 全局变化观察者 */
 	/* globals MutationObserver */
 
 	// can we use __proto__?
+	// 环境支持__proto__属性
 	var hasProto = '__proto__' in {};
 
 	// Browser environment sniffing
+	// 浏览器环境嗅探。判断是在哪种浏览器种。
 	var inBrowser = typeof window !== 'undefined';
 	var UA = inBrowser && window.navigator.userAgent.toLowerCase();
 	var isIE = UA && /msie|trident/.test(UA);
@@ -471,13 +483,16 @@
 
 	// this needs to be lazy-evaled because vue may be required before
 	// vue-server-renderer can set VUE_ENV
+	// 这里需要被懒运算。因为vue在vue服务端渲染设置VUE_ENV之前被需要。
 	var _isServer;
+	//判断是否是服务端渲染。
 	var isServerRendering = function() {
 		if (_isServer === undefined) {
 			/* istanbul ignore if */
 			if (!inBrowser && typeof global !== 'undefined') {
 				// detect presence of vue-server-renderer and avoid
 				// Webpack shimming the process
+				// 检测vue服务端渲染的存在。避免webpack填补process属性???
 				_isServer = global['process'].env.VUE_ENV === 'server';
 			} else {
 				_isServer = false;
@@ -487,9 +502,12 @@
 	};
 
 	// detect devtools
+	// 探测devtools的存在。
 	var devtools = inBrowser && window.__VUE_DEVTOOLS_GLOBAL_HOOK__;
 
 	/* istanbul ignore next */
+	//判断是否原生函数。
+	//原生函数toString()后函数体中是[native code]
 	function isNative(Ctor) {
 		return /native code/.test(Ctor.toString())
 	}
