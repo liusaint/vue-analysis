@@ -516,6 +516,7 @@
 	/**
 	 * Defer a task to execute it asynchronously.
 	 * 延迟任务以异步执行
+	 * 以nextTick的方式
 	 */
 	var nextTick = (function() {
 		var callbacks = [];
@@ -566,11 +567,16 @@
 				// PhantomJS and iOS 7.x
 				MutationObserver.toString() === '[object MutationObserverConstructor]'
 			)) {
+			//关于MutationObserver的参考：
+			//Mutation Observer（变动观察器）是监视DOM变动的接口。当DOM对象树发生任何变动时，Mutation Observer会得到通知。
+			//https://developer.mozilla.org/zh-CN/docs/Web/API/MutationObserver
+			//http://www.cnblogs.com/jscode/p/3600060.html
 			// use MutationObserver where native Promise is not available,
 			// e.g. PhantomJS IE11, iOS7, Android 4.4
 			var counter = 1;
 			var observer = new MutationObserver(nextTickHandler);
 			var textNode = document.createTextNode(String(counter));
+			//如果目标节点为characterData节点(一种抽象接口,具体可以为文本节点,注释节点,以及处理指令节点)时,也要观察该节点的文本内容是否发生变化,则设置为true.
 			observer.observe(textNode, {
 				characterData: true
 			});
@@ -607,6 +613,14 @@
 			}
 		}
 	})();
+
+//promise尝试。
+var promise = new Promise(function(resolve,reject){
+	setTimeout(resolve,500,500);
+})
+promise.then(function(val){
+console.log(val);
+})
 
 	var _Set;
 	/* istanbul ignore if */
