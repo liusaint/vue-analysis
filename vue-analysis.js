@@ -62,13 +62,11 @@
 
 
 
-
-
 	/**
 	 * Check if a tag is a built-in tag.
 	 * 判断tag是否built-in tag的函数
 	 */
-	
+
 	var isBuiltInTag = makeMap('slot,component', true);
 
 	/**
@@ -523,6 +521,7 @@
 		var pending = false;
 		var timerFunc;
 
+		//执行并清空回调函数队列。
 		function nextTickHandler() {
 			pending = false;
 			//复制数组。
@@ -547,6 +546,7 @@
 		//http://zhihu.com/question/55364497/answer/144215284
 		//这一部分涉及到promise。nextTick等知识.
 		if (typeof Promise !== 'undefined' && isNative(Promise)) {
+			//生成一个promise对象。
 			var p = Promise.resolve();
 			var logError = function(err) {
 				console.error(err);
@@ -599,7 +599,7 @@
 					cb.call(ctx);
 				}
 				if (_resolve) {
-					_resolve(ctx);
+					_resolve(ctx);//???
 				}
 			});
 			if (!pending) {
@@ -607,21 +607,27 @@
 				timerFunc();
 			}
 			if (!cb && typeof Promise !== 'undefined') {
+				console.log(1)
 				return new Promise(function(resolve) {
 					_resolve = resolve;
+					console.log(_resolve);
 				})
 			}
 		}
 	})();
 
-//promise尝试。
-var promise = new Promise(function(resolve,reject){
-	setTimeout(resolve,500,500);
-})
-promise.then(function(val){
-console.log(val);
-})
+var _resolve;
+	//promise尝试。
+	var promise = new Promise(function(resolve, reject) {
+		_resolve = resolve;
+		console.log(_resolve.toString());
+		setTimeout(resolve, 500, 500);
+	})
+	promise.then(function(val) {
+		console.log(val);
+	})
 
+	console.log(nextTick() instanceof Promise)
 	var _Set;
 	/* istanbul ignore if */
 	if (typeof Set !== 'undefined' && isNative(Set)) {
