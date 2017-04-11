@@ -517,7 +517,7 @@
 	 * 以nextTick的方式
 	 */
 	var nextTick = (function() {
-		debugger;
+		
 		var callbacks = [];
 		var pending = false;
 		var timerFunc;
@@ -623,7 +623,7 @@ var a = nextTick();
 /* 关于promise。
  *当resolve执行的时候，promise的状态变为resolved。
  *Promise.resolve()产生一个状态为resolved的promise
- *
+ *promise与setTimeout的执行顺序问题。https://www.zhihu.com/question/36972010
  * 
  */
 
