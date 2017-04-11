@@ -517,6 +517,7 @@
 	 * 以nextTick的方式
 	 */
 	var nextTick = (function() {
+		debugger;
 		var callbacks = [];
 		var pending = false;
 		var timerFunc;
@@ -616,18 +617,33 @@
 		}
 	})();
 
-var _resolve;
+var a = nextTick();
+// console.log(a);
+
+/* 关于promise。
+ *当resolve执行的时候，promise的状态变为resolved。
+ *Promise.resolve()产生一个状态为resolved的promise
+ *
+ * 
+ */
+
+// var _resolve;
 	//promise尝试。
 	var promise = new Promise(function(resolve, reject) {
-		_resolve = resolve;
-		console.log(_resolve.toString());
 		setTimeout(resolve, 500, 500);
 	})
+	setTimeout(function(){
 	promise.then(function(val) {
 		console.log(val);
 	})
+},5000)
+	// promise.then(function(val) {
+	// 	console.log(val);
+	// })
+ console.log(promise);
 
-	console.log(nextTick() instanceof Promise)
+
+// 	console.log(nextTick() instanceof Promise)
 	var _Set;
 	/* istanbul ignore if */
 	if (typeof Set !== 'undefined' && isNative(Set)) {
