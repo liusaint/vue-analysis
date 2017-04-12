@@ -691,6 +691,9 @@
 	var warn = noop;
 	var formatComponentName;
 	//???直接一个代码块？
+	//方便编辑器中管理代码？
+	//http://www.cnblogs.com/kuohao/p/5198455.html
+	//大括号的两义性
 	{
 		var hasConsole = typeof console !== 'undefined';
 
