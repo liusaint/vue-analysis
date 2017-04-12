@@ -517,7 +517,7 @@
 	 * 以nextTick的方式
 	 */
 	var nextTick = (function() {
-		
+
 		var callbacks = [];
 		var pending = false;
 		var timerFunc;
@@ -533,12 +533,18 @@
 			}
 		}
 
+
+		// the nextTick行为依赖于微任务队列，依赖于原生promise.then或MutationObserver。
+		// MutationObserver有更广泛的支持，但是在ios版本9.3.3以上的UIWebView有严重的bug，执行几次之后就完全不会执行了。
+		// 所以我们优先使用原生的promise.
+		// 
 		// the nextTick behavior leverages the microtask queue, which can be accessed
 		// via either native Promise.then or MutationObserver.
 		// MutationObserver has wider support, however it is seriously bugged in
 		// UIWebView in iOS >= 9.3.3 when triggered in touch event handlers. It
 		// completely stops working after triggering a few times... so, if native
 		// Promise is available, we will use it:
+		// 
 		/* istanbul ignore if */
 		//nextTick与setTimeout(fn,0)的区别。
 		//http://www.cnblogs.com/lengyuhong/archive/2013/03/31/2987745.html
@@ -559,6 +565,8 @@
 				// microtask queue but the queue isn't being flushed, until the browser
 				// needs to do some other work, e.g. handle a timer. Therefore we can
 				// "force" the microtask queue to be flushed by adding an empty timer.
+				// 在有问题的UIWebViews中，promise.then不会完全地被中断，但是它会保持一种奇怪的状态，回调函数都会推到一个微任务队列，
+				// 但是这个队列不会运行直到浏览器做一些其他的工作，比如发起一个timer。因为我们可以设置一个空的timer来强制执行微队列中的任务。
 				if (isIOS) {
 					setTimeout(noop);
 				}
@@ -576,6 +584,7 @@
 			// e.g. PhantomJS IE11, iOS7, Android 4.4
 			var counter = 1;
 			var observer = new MutationObserver(nextTickHandler);
+			//建立一个文本节点。
 			var textNode = document.createTextNode(String(counter));
 			//如果目标节点为characterData节点(一种抽象接口,具体可以为文本节点,注释节点,以及处理指令节点)时,也要观察该节点的文本内容是否发生变化,则设置为true.
 			observer.observe(textNode, {
@@ -583,10 +592,12 @@
 			});
 			timerFunc = function() {
 				counter = (counter + 1) % 2;
+				// 修改文本节点的值，以触发异步调用。
 				textNode.data = String(counter);
 			};
 		} else {
 			// fallback to setTimeout
+			// 用原始的setTimeout。
 			/* istanbul ignore next */
 			timerFunc = function() {
 				setTimeout(nextTickHandler, 0);
@@ -600,7 +611,7 @@
 					cb.call(ctx);
 				}
 				if (_resolve) {
-					_resolve(ctx);//???
+					_resolve(ctx); //???其实是让返回的promise尽快地变成resolved的状态？
 				}
 			});
 			if (!pending) {
@@ -617,33 +628,38 @@
 		}
 	})();
 
-var a = nextTick();
-// console.log(a);
+	var a = nextTick();
+	a.then(function() {
+		console.log(11111);
+	})
+	console.log(1);
+	// console.log(a);
 
-/* 关于promise。
- *当resolve执行的时候，promise的状态变为resolved。
- *Promise.resolve()产生一个状态为resolved的promise
- *promise与setTimeout的执行顺序问题。https://www.zhihu.com/question/36972010
- * 
- */
+	/* 关于promise。
+	 *当resolve执行的时候，promise的状态变为resolved。
+	 *Promise.resolve()产生一个状态为resolved的promise
+	 *promise与setTimeout的执行顺序问题。https://www.zhihu.com/question/36972010
+	 * 
+	 */
 
-// var _resolve;
+	// var _resolve;
 	//promise尝试。
 	var promise = new Promise(function(resolve, reject) {
-		setTimeout(resolve, 500, 500);
+		setTimeout(resolve, 1000, 500);
 	})
-	setTimeout(function(){
-	promise.then(function(val) {
-		console.log(val);
-	})
-},5000)
-	// promise.then(function(val) {
-	// 	console.log(val);
-	// })
- console.log(promise);
+	setTimeout(function() {
+			promise.then(function(val) {
+				// console.log(val);
+				// console.log(promise)
+			})
+		}, 5000)
+		// promise.then(function(val) {
+		// 	console.log(val);
+		// })
+		// console.log(promise);
 
 
-// 	console.log(nextTick() instanceof Promise)
+	// 	console.log(nextTick() instanceof Promise)
 	var _Set;
 	/* istanbul ignore if */
 	if (typeof Set !== 'undefined' && isNative(Set)) {
