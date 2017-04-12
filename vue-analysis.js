@@ -664,6 +664,7 @@
 	/* istanbul ignore if */
 	if (typeof Set !== 'undefined' && isNative(Set)) {
 		// use native Set when available.
+		// 如果原生实现了Set就用原生的。
 		_Set = Set;
 	} else {
 		// a non-standard Set polyfill that only works with primitive keys.
@@ -685,9 +686,11 @@
 		}());
 	}
 
+
+
 	var warn = noop;
 	var formatComponentName;
-
+	//???直接一个代码块？
 	{
 		var hasConsole = typeof console !== 'undefined';
 
