@@ -795,17 +795,20 @@
 	]
 	.forEach(function(method) {
 		// cache original method
+		// 原始方法
 		var original = arrayProto[method];
 		def(arrayMethods, method, function mutator() {
 			var arguments$1 = arguments;
 
 			// avoid leaking arguments:
+			// 避免泄露参数???
 			// http://jsperf.com/closure-with-arguments
 			var i = arguments.length;
 			var args = new Array(i);
 			while (i--) {
 				args[i] = arguments$1[i];
 			}
+			//this
 			var result = original.apply(this, args);
 			var ob = this.__ob__;
 			var inserted;
