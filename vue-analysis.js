@@ -832,8 +832,10 @@
 		});
 	});
 
+
 	/*  */
 
+	//getOwnPropertyNames返回对象所有自有属性的属性名。包括不可枚举的属性。
 	var arrayKeys = Object.getOwnPropertyNames(arrayMethods);
 
 	/**
@@ -841,6 +843,10 @@
 	 * also converted to become reactive. However when passing down props,
 	 * we don't want to force conversion because the value may be a nested value
 	 * under a frozen data structure. Converting it would defeat the optimization.
+	 * 默认地，一个响应属性被设置，新的值也转变成可响应的。
+	 * 然后，传入参数时，我们可能不想强制转变因为这个值可能是一个冻结的数据结构下的嵌套值。
+	 * 转变它可能不是最好的。
+	 * 
 	 */
 	var observerState = {
 		shouldConvert: true,
@@ -852,6 +858,8 @@
 	 * object. Once attached, the observer converts target
 	 * object's property keys into getter/setters that
 	 * collect dependencies and dispatches updates.
+	 * Observer类附加到每个要观察的对象上。
+	 * 一旦附加上，观察者将目标对象的属性转化成getter\setters以收集依赖以及分发更新。
 	 */
 	var Observer = function Observer(value) {
 		this.value = value;
@@ -1563,7 +1571,8 @@
 	}
 
 
-
+	//Object.freeze冻结对象。不可添加，删除，修改。
+	//将上面的一些方法放到一个工具类的不可修改的对象中。
 	var util = Object.freeze({
 		defineReactive: defineReactive$$1,
 		_toString: _toString,
@@ -3632,14 +3641,18 @@
 		}
 		return options
 	}
-
+	//入口在这。 如果不是new调用的话会警告。
+	//因为是严格模式，所以不以new调用的情况下this不指向window。而是undefined;
+	//注意在script标签中，'use strict'前面不要有代码???
 	function Vue$3(options) {
 		if ("development" !== 'production' &&
 			!(this instanceof Vue$3)) {
 			warn('Vue is a constructor and should be called with the `new` keyword');
 		}
+
 		this._init(options);
 	}
+
 
 	initMixin(Vue$3);
 	stateMixin(Vue$3);
@@ -8865,6 +8878,8 @@
 	/**
 	 * Get outerHTML of elements, taking care
 	 * of SVG elements in IE as well.
+	 * 获取一个元素的outerHTML
+	 * el.cloneNode(true)
 	 */
 	function getOuterHTML(el) {
 		if (el.outerHTML) {

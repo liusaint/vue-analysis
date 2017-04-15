@@ -4,4 +4,29 @@
 	<title>断点调试用</title>
 	<script src = "vue-analysis.js"></script>
 </head>
+<body>
+
+	<div id="app">
+{{message}}
+	</div>
+	<script>
+
+var app =  Vue({
+	el:'#app',
+	data:{
+		message:123
+	}
+})
+
+'use strict';
+function a(){
+	console.log(this,'a');
+
+}
+a()
+
+
+
+	</script>
+</body>
 </html>
