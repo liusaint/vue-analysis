@@ -696,7 +696,7 @@
 	//大括号的两义性
 	{
 		var hasConsole = typeof console !== 'undefined';
-
+		//警告
 		warn = function(msg, vm) {
 			if (hasConsole && (!config.silent)) {
 				console.error("[Vue warn]: " + msg + " " + (
