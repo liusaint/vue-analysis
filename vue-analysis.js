@@ -763,6 +763,8 @@
 	// the current target watcher being evaluated.
 	// this is globally unique because there could be only one
 	// watcher being evaluated at any time.
+	// watcher在跟进的目标。
+	// 全局在任务时候只有一个wather在跟进。
 	Dep.target = null;
 	var targetStack = [];
 
