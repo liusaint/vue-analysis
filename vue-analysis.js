@@ -1627,6 +1627,7 @@
 	});
 
 	/* not type checking this file because flow doesn't play well with Proxy */
+	/* 对proxy的处理 */
 
 	var initProxy;
 
@@ -4134,6 +4135,7 @@
 
 	/**
 	 * Query an element selector if it's not an element already.
+	 * 查询某个dom节点。
 	 */
 	function query(el) {
 		if (typeof el === 'string') {
