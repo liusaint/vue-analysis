@@ -1231,6 +1231,8 @@
 	 *
 	 * Watchers hashes should not overwrite one
 	 * another, so we merge them as arrays.
+	 * 监察者的哈希不应该被覆盖。
+	 * 所以我们合并成数组。
 	 */
 	strats.watch = function(parentVal, childVal) {
 		/* istanbul ignore if */
@@ -1255,6 +1257,7 @@
 
 	/**
 	 * Other object hashes.
+	 * 其他对象的哈希。直接覆盖？
 	 */
 	strats.props =
 		strats.methods =
@@ -1273,6 +1276,7 @@
 
 	/**
 	 * Default strategy.
+	 * 默认策略
 	 */
 	var defaultStrat = function(parentVal, childVal) {
 		return childVal === undefined ? parentVal : childVal
@@ -1280,6 +1284,7 @@
 
 	/**
 	 * Validate component names
+	 * 验证组件名称。  检测是不是原生标签。或vue定制标签。
 	 */
 	function checkComponents(options) {
 		for (var key in options.components) {
@@ -1296,6 +1301,7 @@
 	/**
 	 * Ensure all props option syntax are normalized into the
 	 * Object-based format.
+	 * 确定所有的选项语法被标准化成基于对象的。
 	 */
 	function normalizeProps(options) {
 		var props = options.props;
@@ -1331,6 +1337,7 @@
 
 	/**
 	 * Normalize raw function directives into object format.
+	 * 标准化 方法指定成对象格式
 	 */
 	function normalizeDirectives(options) {
 		var dirs = options.directives;
@@ -1350,6 +1357,8 @@
 	/**
 	 * Merge two option objects into a new one.
 	 * Core utility used in both instantiation and inheritance.
+	 * 合并两个选项对象到一个新的。
+	 * 核心实用方法。实例化或继承时都可以用。
 	 */
 	function mergeOptions(
 		parent,
