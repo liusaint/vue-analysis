@@ -881,6 +881,8 @@
 	 * Walk through each property and convert them into
 	 * getter/setters. This method should only be called when
 	 * value type is Object.
+	 * 游历每个属性并转换他们成getter/setter。
+	 * 这个方法只是对Object使用。
 	 */
 	Observer.prototype.walk = function walk(obj) {
 		var keys = Object.keys(obj);
@@ -891,6 +893,7 @@
 
 	/**
 	 * Observe a list of Array items.
+	 * 观察一些数组项目
 	 */
 	Observer.prototype.observeArray = function observeArray(items) {
 		for (var i = 0, l = items.length; i < l; i++) {
@@ -899,10 +902,12 @@
 	};
 
 	// helpers
+	// 助手 
 
 	/**
 	 * Augment an target Object or Array by intercepting
 	 * the prototype chain using __proto__
+	 * 通过截取原型链__proto__增强一个目标对象或数组
 	 */
 	function protoAugment(target, src) {
 		/* eslint-disable no-proto */
@@ -913,6 +918,7 @@
 	/**
 	 * Augment an target Object or Array by defining
 	 * hidden properties.
+	 * 通过定义隐藏属性来增强对象或数组
 	 */
 	/* istanbul ignore next */
 	function copyAugment(target, src, keys) {
@@ -926,6 +932,9 @@
 	 * Attempt to create an observer instance for a value,
 	 * returns the new observer if successfully observed,
 	 * or the existing observer if the value already has one.
+	 * 为一个值创建一个观察者实例。
+	 * 创建成功则返回这个实例。
+	 * 如果这个值有一个观察者实例，返回它。
 	 */
 	function observe(value, asRootData) {
 		if (!isObject(value)) {
@@ -951,6 +960,7 @@
 
 	/**
 	 * Define a reactive property on an Object.
+	 * 在一个对象上定义一个响应属性。
 	 */
 	function defineReactive$$1(
 		obj,
@@ -1011,6 +1021,8 @@
 	 * Set a property on an object. Adds the new property and
 	 * triggers change notification if the property doesn't
 	 * already exist.
+	 * 给一个属性赋值。
+	 * 添加新属性值得。如果这个属性是新增的则触发通知。
 	 */
 	function set$1(obj, key, val) {
 		if (Array.isArray(obj)) {
@@ -1041,6 +1053,7 @@
 
 	/**
 	 * Delete a property and trigger change if necessary.
+	 * 删除属性并触发改变。
 	 */
 	function del(obj, key) {
 		var ob = obj.__ob__;
@@ -1064,6 +1077,8 @@
 	/**
 	 * Collect dependencies on array elements when the array is touched, since
 	 * we cannot intercept array element access like property getters.
+	 * 收集数组元素的依赖，
+	 * 因为我们不能像属性getter那样拦截数组存取。
 	 */
 	function dependArray(value) {
 		for (var e = (void 0), i = 0, l = value.length; i < l; i++) {
@@ -1081,11 +1096,13 @@
 	 * Option overwriting strategies are functions that handle
 	 * how to merge a parent option value and a child option
 	 * value into the final value.
+	 * 选项覆盖策略是用来控制如何合并父选项值与子选项值到一个最终的value中。
 	 */
 	var strats = config.optionMergeStrategies;
 
 	/**
 	 * Options with restrictions
+	 * 有限制的选项
 	 */
 	{
 		strats.el = strats.propsData = function(parent, child, vm, key) {
@@ -1101,6 +1118,7 @@
 
 	/**
 	 * Helper that recursively merges two data objects together.
+	 * 递归地合并两个数据对象到一起。
 	 */
 	function mergeData(to, from) {
 		if (!from) {
@@ -1131,6 +1149,7 @@
 	) {
 		if (!vm) {
 			// in a Vue.extend merge, both should be functions
+			// 在vue.extend合并时，两者都应该是function.
 			if (!childVal) {
 				return parentVal
 			}
@@ -1151,6 +1170,9 @@
 			// merged result of both functions... no need to
 			// check if parentVal is a function here because
 			// it has to be a function to pass previous merges.
+			// 当两个值都存在的时候。我们需要返回一个函数合并两个函数的计算结果。
+			// 不需要检测parentVal是不是方法。
+			// 因为它必须是一个函数才能通过前面的合并。
 			return function mergedDataFn() {
 				return mergeData(
 					childVal.call(this),
@@ -1173,11 +1195,13 @@
 
 	/**
 	 * Hooks and param attributes are merged as arrays.
+	 * 勾子和属性参数合并成数组。
 	 */
 	function mergeHook(
 		parentVal,
 		childVal
 	) {
+		//???这个三目可以多看看。
 		return childVal ? parentVal ? parentVal.concat(childVal) : Array.isArray(childVal) ? childVal : [childVal] : parentVal
 	}
 
@@ -1191,6 +1215,7 @@
 	 * When a vm is present (instance creation), we need to do
 	 * a three-way merge between constructor options, instance
 	 * options and parent options.
+	 * 当一个vue实例。我们需要一个三向合并。构造函数，实例选项和当前的选项。
 	 */
 	function mergeAssets(parentVal, childVal) {
 		var res = Object.create(parentVal || null);
