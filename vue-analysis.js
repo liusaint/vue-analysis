@@ -1405,6 +1405,7 @@
 	 * Resolve an asset.
 	 * This function is used because child instances need access
 	 * to assets defined in its ancestor chain.
+	 * 使用此函数是因为子实例需要访问其祖先链中定义的资源。
 	 */
 	function resolveAsset(
 		options,
@@ -1418,6 +1419,7 @@
 		}
 		var assets = options[type];
 		// check local registration variations first
+		// 首先检查本地注册的变量
 		if (hasOwn(assets, id)) {
 			return assets[id]
 		}
@@ -1430,6 +1432,7 @@
 			return assets[PascalCaseId]
 		}
 		// fallback to prototype chain
+		// 回退到原型链
 		var res = assets[id] || assets[camelizedId] || assets[PascalCaseId];
 		if ("development" !== 'production' && warnMissing && !res) {
 			warn(
@@ -1464,6 +1467,7 @@
 			value = getPropDefaultValue(vm, prop, key);
 			// since the default value is a fresh copy,
 			// make sure to observe it.
+			// 由于默认值是一个新鲜的副本, 确保一定要观察它
 			var prevShouldConvert = observerState.shouldConvert;
 			observerState.shouldConvert = true;
 			observe(value);
@@ -1476,14 +1480,18 @@
 
 	/**
 	 * Get the default value of a prop.
+	 * 得到一个属性的默认值
+	 * 
 	 */
 	function getPropDefaultValue(vm, prop, key) {
 		// no default, return undefined
+		// 没有默认值，返回undefined
 		if (!hasOwn(prop, 'default')) {
 			return undefined
 		}
 		var def = prop.default;
 		// warn against non-factory defaults for Object & Array
+		// 警告
 		if (isObject(def)) {
 			"development" !== 'production' && warn(
 				'Invalid default value for prop "' + key + '": ' +
@@ -1494,12 +1502,15 @@
 		}
 		// the raw prop value was also undefined from previous render,
 		// return previous default value to avoid unnecessary watcher trigger
+		// 原始的属性值从先前的渲染也未定义
+		// 返回之前的默认值来避免不必要的监视器的触发。
 		if (vm && vm.$options.propsData &&
 			vm.$options.propsData[key] === undefined &&
 			vm[key] !== undefined) {
 			return vm[key]
 		}
 		// call factory function for non-Function types
+		// 运行工厂函数
 		return typeof def === 'function' && prop.type !== Function ? def.call(vm) : def
 	}
 
