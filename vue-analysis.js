@@ -1516,6 +1516,7 @@
 
 	/**
 	 * Assert whether a prop is valid.
+	 * 断言一个属性是否有效。
 	 */
 	function assertProp(
 		prop,
@@ -1569,6 +1570,7 @@
 
 	/**
 	 * Assert the type of a value
+	 * 断言一个值的类型
 	 */
 	function assertType(value, type) {
 		var valid;
@@ -1598,6 +1600,9 @@
 	 * Use function string name to check built-in types,
 	 * because a simple equality check will fail when running
 	 * across different vms / iframes.
+	 * 使用字符串函数名称检查内置类型
+	 * 因为一个简单的平等检查运行时会失败 在不同的vm / iframes 中
+	 * ???
 	 */
 	function getType(fn) {
 		var match = fn && fn.toString().match(/^\s*function (\w+)/);
@@ -1700,6 +1705,7 @@
 			Proxy.toString().match(/native code/);
 
 		if (hasProxy) {
+			// 是否内置的修饰符号
 			var isBuiltInModifier = makeMap('stop,prevent,self,ctrl,shift,alt,meta');
 			config.keyCodes = new Proxy(config.keyCodes, {
 				set: function set(target, key, value) {
