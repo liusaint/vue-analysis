@@ -1788,6 +1788,7 @@
 	};
 
 	// DEPRECATED: alias for componentInstance for backwards compat.
+	// 别名向后兼容
 	/* istanbul ignore next */
 	prototypeAccessors.child.get = function() {
 		return this.componentInstance
@@ -1810,6 +1811,9 @@
 	// used for static nodes and slot nodes because they may be reused across
 	// multiple renders, cloning them avoids errors when DOM manipulations rely
 	// on their elm reference.
+	// 优化的浅克隆
+	// 静态节点和插槽节点使用，因为他们可能在多个显示中被重用，
+	// 克隆它的们来避免依赖于他们的节点引用的dom操作
 	function cloneVNode(vnode) {
 		var cloned = new VNode(
 			vnode.tag,
@@ -1869,6 +1873,7 @@
 		}
 
 		// async component
+		// 异步组件
 		if (!Ctor.cid) {
 			if (Ctor.resolved) {
 				Ctor = Ctor.resolved;
@@ -1876,11 +1881,15 @@
 				Ctor = resolveAsyncComponent(Ctor, baseCtor, function() {
 					// it's ok to queue this on every render because
 					// $forceUpdate is buffered by the scheduler.
+					// 可以排队在每一个渲染。
+					// 因为$forceUpdate会被调度器缓存
 					context.$forceUpdate();
 				});
 				if (!Ctor) {
 					// return nothing if this is indeed an async component
 					// wait for the callback to trigger parent update.
+					// 当这确实是一个异步组件跳出函数，
+					// 等待回调来触发父节点的更新。
 					return
 				}
 			}
@@ -1888,34 +1897,44 @@
 
 		// resolve constructor options in case global mixins are applied after
 		// component constructor creation
+		// 分解构造器选项，
+		// 假设组件构造器被创造后全局mixin被调用
 		resolveConstructorOptions(Ctor);
 
 		data = data || {};
 
 		// extract props
+		// 提取属性
 		var propsData = extractProps(data, Ctor);
 
 		// functional component
+		// 功能的组件　
 		if (Ctor.options.functional) {
 			return createFunctionalComponent(Ctor, propsData, data, context, children)
 		}
 
 		// extract listeners, since these needs to be treated as
 		// child component listeners instead of DOM listeners
+		// 提取监听器，
+		// 因为他们需要像子组件监听器而不是dom监听器一样对待。
 		var listeners = data.on;
 		// replace with listeners with .native modifier
+		// 使用原生修改器来替换监听器。
 		data.on = data.nativeOn;
 
 		if (Ctor.options.abstract) {
 			// abstract components do not keep anything
 			// other than props & listeners
+			// 抽象组件不要保持任何东西（属性，监听器）
 			data = {};
 		}
 
 		// merge component management hooks onto the placeholder node
+		// 合并组件管理的钩子到一个占位节点。
 		mergeHooks(data);
 
 		// return a placeholder vnode
+		// 返回一个占位节点。
 		var name = Ctor.options.name || tag;
 		var vnode = new VNode(
 			("vue-component-" + (Ctor.cid) + (name ? ("-" + name) : '')),
