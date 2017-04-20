@@ -1965,6 +1965,8 @@
 		}
 		// ensure the createElement function in functional components
 		// gets a unique context - this is necessary for correct named slot check
+		// 确保创建节点的函数在功能的组件获得一个唯一的上下文。
+		// 必要对正确命名的插槽进行检查。
 		var _context = Object.create(context);
 		var h = function(a, b, c, d) {
 			return createElement(_context, a, b, c, d, true);
@@ -1987,6 +1989,7 @@
 		return vnode
 	}
 
+	//我们知道安装好的节点。但是不是激活的实例。生命周期中。
 	function createComponentInstanceForVnode(
 		vnode, // we know it's MountedComponentVNode but flow doesn't
 		parent, // activeInstance in lifecycle state
@@ -2006,6 +2009,7 @@
 			_refElm: refElm || null
 		};
 		// check inline-template render functions
+		// 检测内联模板渲染函数。
 		var inlineTemplate = vnode.data.inlineTemplate;
 		if (inlineTemplate) {
 			options.render = inlineTemplate.render;
@@ -2029,6 +2033,7 @@
 			);
 			child.$mount(hydrating ? vnode.elm : undefined, hydrating);
 		} else if (vnode.data.keepAlive) {
+			//保持组件生存。像一个补丁一样对待。
 			// kept-alive components, treat as a patch
 			var mountedNode = vnode; // work around flow
 			prepatch(mountedNode, mountedNode);
@@ -2060,6 +2065,9 @@
 		}
 	}
 
+	//销毁一个节点。
+	//keep-alive节点只是改变状态并触发钩子。
+	//正常节点则是执行销毁
 	function destroy$1(vnode) {
 		if (!vnode.componentInstance._isDestroyed) {
 			if (!vnode.data.keepAlive) {
@@ -2071,6 +2079,7 @@
 		}
 	}
 
+	//解决异步组件
 	function resolveAsyncComponent(
 		factory,
 		baseCtor,
@@ -2078,6 +2087,7 @@
 	) {
 		if (factory.requested) {
 			// pool callbacks
+			// 回调池
 			factory.pendingCallbacks.push(cb);
 		} else {
 			factory.requested = true;
@@ -2089,9 +2099,12 @@
 					res = baseCtor.extend(res);
 				}
 				// cache resolved
+				// 缓存解决
 				factory.resolved = res;
 				// invoke callbacks only if this is not a synchronous resolve
 				// (async resolves are shimmed as synchronous during SSR)
+				// 只有当这不是一个同步处理时调用回调
+				// 服务端渲染时异步处理被垫片成同步对待。
 				if (!sync) {
 					for (var i = 0, l = cbs.length; i < l; i++) {
 						cbs[i](res);
