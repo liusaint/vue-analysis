@@ -2136,6 +2136,8 @@
 		// we are only extracting raw values here.
 		// validation and default values are handled in the child
 		// component itself.
+		// 我们只抽取未加工的值这里。
+		// 验证值和默认值由子组件自己处理。
 		var propOptions = Ctor.options.props;
 		if (!propOptions) {
 			return
@@ -2180,6 +2182,7 @@
 		return false
 	}
 
+	//合并钩子
 	function mergeHooks(data) {
 		if (!data.hook) {
 			data.hook = {};
@@ -2192,6 +2195,7 @@
 		}
 	}
 
+	// 包装两个函数到一个
 	function mergeHook$1(one, two) {
 		return function(a, b, c, d) {
 			one(a, b, c, d);
@@ -2218,10 +2222,10 @@
 		}
 	}
 
-	/*  */
+	/* 使事件正常化 */
 
 	var normalizeEvent = cached(function(name) {
-		var once = name.charAt(0) === '~'; // Prefixed last, checked first
+		var once = name.charAt(0) === '~'; // Prefixed last, checked first前缀先检查
 		name = once ? name.slice(1) : name;
 		var capture = name.charAt(0) === '!';
 		name = capture ? name.slice(1) : name;
@@ -2231,7 +2235,7 @@
 			capture: capture
 		}
 	});
-
+	//创建事件处理控制
 	function createEventHandle(fn) {
 		var handle = {
 			fn: fn,
@@ -2250,7 +2254,7 @@
 		};
 		return handle
 	}
-
+	// 更新监听器
 	function updateListeners(
 		on,
 		oldOn,
@@ -2286,7 +2290,10 @@
 		}
 	}
 
-	/*  */
+	/* 模板编译器试图在编译时通过静态分析模板来最小化对标准化的需要。
+     * 普通的HTML标记，标准化可以完全跳过因为生成的渲染函数会保证返回数组实现的vnode。
+     * 有两种情况需要额外的标准化
+	 */
 
 	// The template compiler attempts to minimize the need for normalization by
 	// statically analyzing the template at compile time.
@@ -2300,6 +2307,8 @@
 	// nomralization is needed - if any child is an Array, we flatten the whole
 	// thing with Array.prototype.concat. It is guaranteed to be only 1-level deep
 	// because functional components already normalize their own children.
+	// 当子类包含组件时，因为函数组件可以返回数组而不是单个根。
+	// 在这种情况下，一个简单的标准化是必要的-如果任何一个孩子都是一个数组，我们用Array.prototype.concat降维。这保证只有1深度因为功能组件已经规范其自己的孩子。
 	function simpleNormalizeChildren(children) {
 		for (var i = 0; i < children.length; i++) {
 			if (Array.isArray(children[i])) {
@@ -2313,6 +2322,7 @@
 	// e.g. <template>, <slot>, v-for, or when the children is provided by user
 	// with hand-written render functions / JSX. In such cases a full normalization
 	// is needed to cater to all possible types of children values.
+	// 2。当孩子总是产生constrcuts包含嵌套的数组，例如<模板>、<槽>，v-for，当孩子是用户手写的渲染函数/ JSX。在这种情况下，需要一个完整的标准化，以满足所有可能的类型的子值。
 	function normalizeChildren(children) {
 		return isPrimitive(children) ? [createTextVNode(children)] : Array.isArray(children) ? normalizeArrayChildren(children) : undefined
 	}
