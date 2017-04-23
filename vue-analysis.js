@@ -2775,6 +2775,7 @@
 			child = children[i];
 			// named slots should only be respected if the vnode was rendered in the
 			// same context.
+			// 命名插槽只在vnode在相同上下文渲染时才需要重视。
 			if ((child.context === context || child.functionalContext === context) &&
 				child.data && (name = child.data.slot)) {
 				var slot = (slots[name] || (slots[name] = []));
@@ -2788,6 +2789,7 @@
 			}
 		}
 		// ignore single whitespace
+		// 忽略单个空格
 		if (defaultSlot.length && !(
 				defaultSlot.length === 1 &&
 				(defaultSlot[0].text === ' ' || defaultSlot[0].isComment)
@@ -2797,12 +2799,13 @@
 		return slots
 	}
 
-	/*  */
+	/* 初始化事件？ */
 
 	function initEvents(vm) {
 		vm._events = Object.create(null);
 		vm._hasHookEvent = false;
 		// init parent attached events
+		// 初始化父上面的事件
 		var listeners = vm.$options._parentListeners;
 		if (listeners) {
 			updateComponentListeners(vm, listeners);
@@ -2832,6 +2835,7 @@
 		updateListeners(listeners, oldListeners || {}, add$1, remove$2, vm);
 	}
 
+	//事件混入
 	function eventsMixin(Vue) {
 		var hookRE = /^hook:/;
 		Vue.prototype.$on = function(event, fn) {
@@ -2839,12 +2843,13 @@
 			(vm._events[event] || (vm._events[event] = [])).push(fn);
 			// optimize hook:event cost by using a boolean flag marked at registration
 			// instead of a hash lookup
+			// 优化钩子：通过在注册时使用布尔标记而不是散列查找 来优化事件成本
 			if (hookRE.test(event)) {
 				vm._hasHookEvent = true;
 			}
 			return vm
 		};
-
+		//装饰模式。把On的方法里解绑之事件。
 		Vue.prototype.$once = function(event, fn) {
 			var vm = this;
 
@@ -2859,7 +2864,7 @@
 
 		Vue.prototype.$off = function(event, fn) {
 			var vm = this;
-			// all
+			// all 解绑全部
 			if (!arguments.length) {
 				vm._events = Object.create(null);
 				return vm
@@ -2869,11 +2874,13 @@
 			if (!cbs) {
 				return vm
 			}
+			//只传递事件名，解绑该事件下的所有。
 			if (arguments.length === 1) {
 				vm._events[event] = null;
 				return vm
 			}
 			// specific handler
+			// 具体到某个事件下的某个处理函数的解绑。
 			var cb;
 			var i = cbs.length;
 			while (i--) {
@@ -2885,12 +2892,13 @@
 			}
 			return vm
 		};
-
+		//发出事件 emit与trigger的区别???
 		Vue.prototype.$emit = function(event) {
 			var vm = this;
 			var cbs = vm._events[event];
 			if (cbs) {
 				cbs = cbs.length > 1 ? toArray(cbs) : cbs;
+				//第二个是参数。
 				var args = toArray(arguments, 1);
 				for (var i = 0, l = cbs.length; i < l; i++) {
 					cbs[i].apply(vm, args);
@@ -2903,11 +2911,12 @@
 	/*  */
 
 	var activeInstance = null;
-
+	// 初始化生命周期
 	function initLifecycle(vm) {
 		var options = vm.$options;
 
 		// locate first non-abstract parent
+		// 查找第一个不抽象的父的位置
 		var parent = options.parent;
 		if (parent && !options.abstract) {
 			while (parent.$options.abstract && parent.$parent) {
@@ -2928,8 +2937,9 @@
 		vm._isDestroyed = false;
 		vm._isBeingDestroyed = false;
 	}
-
+	// lifecycleMixin()开始
 	function lifecycleMixin(Vue) {
+
 		Vue.prototype._mount = function(
 			el,
 			hydrating
@@ -2961,6 +2971,7 @@
 			hydrating = false;
 			// manually mounted instance, call mounted on self
 			// mounted is called for render-created child components in its inserted hook
+			// 手动安装实例，安装在自安装上的调用被要求在插入的钩子中渲染创建的子组件
 			if (vm.$vnode == null) {
 				vm._isMounted = true;
 				callHook(vm, 'mounted');
@@ -2980,8 +2991,10 @@
 			vm._vnode = vnode;
 			// Vue.prototype.__patch__ is injected in entry points
 			// based on the rendering backend used.
+			// Vue.prototype.__patch__基于所使用的渲染后端注入到入口点
 			if (!prevVnode) {
 				// initial render
+				// 最初的渲染
 				vm.$el = vm.__patch__(
 					vm.$el, vnode, hydrating, false /* removeOnly */ ,
 					vm.$options._parentElm,
@@ -2989,10 +3002,12 @@
 				);
 			} else {
 				// updates
+				// 更新
 				vm.$el = vm.__patch__(prevVnode, vnode);
 			}
 			activeInstance = prevActiveInstance;
 			// update __vue__ reference
+			// 更新__vue__引用
 			if (prevEl) {
 				prevEl.__vue__ = null;
 			}
@@ -3000,11 +3015,13 @@
 				vm.$el.__vue__ = vm;
 			}
 			// if parent is an HOC, update its $el as well
+			// 如果父是一个HOC,同样更新它的$el
 			if (vm.$vnode && vm.$parent && vm.$vnode === vm.$parent._vnode) {
 				vm.$parent.$el = vm.$el;
 			}
 			// updated hook is called by the scheduler to ensure that children are
 			// updated in a parent's updated hook.
+			// updated hook被调用以确保孩子们更新在一个父亲的updated hook中。
 		};
 
 		Vue.prototype._updateFromParent = function(
@@ -3016,12 +3033,13 @@
 			var vm = this;
 			var hasChildren = !!(vm.$options._renderChildren || renderChildren);
 			vm.$options._parentVnode = parentVnode;
-			vm.$vnode = parentVnode; // update vm's placeholder node without re-render
-			if (vm._vnode) { // update child tree's parent
+			vm.$vnode = parentVnode; // update vm's placeholder node without re-render更新vm的占位符节点非新渲染
+			if (vm._vnode) { // update child tree's parent 更新子树的父
 				vm._vnode.parent = parentVnode;
 			}
 			vm.$options._renderChildren = renderChildren;
 			// update props
+			// 更新属性
 			if (propsData && vm.$options.props) {
 				observerState.shouldConvert = false; {
 					observerState.isSettingProps = true;
@@ -3037,12 +3055,15 @@
 				vm.$options.propsData = propsData;
 			}
 			// update listeners
+			// 更新事件
 			if (listeners) {
 				var oldListeners = vm.$options._parentListeners;
 				vm.$options._parentListeners = listeners;
 				updateComponentListeners(vm, listeners, oldListeners);
 			}
 			// resolve slots + force update if has children
+			// 解决插槽。
+			// 有孩子的话强制更新
 			if (hasChildren) {
 				vm.$slots = resolveSlots(renderChildren, parentVnode.context);
 				vm.$forceUpdate();
@@ -3064,11 +3085,13 @@
 			callHook(vm, 'beforeDestroy');
 			vm._isBeingDestroyed = true;
 			// remove self from parent
+			// 从父亲中删除自己
 			var parent = vm.$parent;
 			if (parent && !parent._isBeingDestroyed && !vm.$options.abstract) {
 				remove$1(parent.$children, vm);
 			}
 			// teardown watchers
+			// 删除观察者
 			if (vm._watcher) {
 				vm._watcher.teardown();
 			}
@@ -3078,22 +3101,29 @@
 			}
 			// remove reference from data ob
 			// frozen object may not have observer.
+			// 从数据ob中删除引用
+			// 冻结对象可能没有观察者
 			if (vm._data.__ob__) {
 				vm._data.__ob__.vmCount--;
 			}
 			// call the last hook...
+			// 最后一个钩子
 			vm._isDestroyed = true;
 			callHook(vm, 'destroyed');
 			// turn off all instance listeners.
+			// 删除实例上的事件监听器
 			vm.$off();
 			// remove __vue__ reference
+			// 删除__vue__引用
 			if (vm.$el) {
 				vm.$el.__vue__ = null;
 			}
 			// invoke destroy hooks on current rendered tree
+			// 在当前渲染的树调用destory hook
 			vm.__patch__(vm._vnode, null);
 		};
 	}
+	// lifecycleMixin()结束
 
 	function callHook(vm, hook) {
 		var handlers = vm.$options[hook];
