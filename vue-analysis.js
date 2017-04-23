@@ -2376,6 +2376,7 @@
 
 	// wrapper function for providing a more flexible interface
 	// without getting yelled at by flow
+	// 包装函数，提供更灵活的接口，而不被叫喊的流。
 	function createElement(
 		context,
 		tag,
@@ -2415,6 +2416,7 @@
 			return createEmptyVNode()
 		}
 		// support single function children as default scoped slot
+		// 支持单一功能的子作为默认作用域槽
 		if (Array.isArray(children) &&
 			typeof children[0] === 'function') {
 			data = data || {};
@@ -2434,17 +2436,20 @@
 			ns = config.getTagNamespace(tag);
 			if (config.isReservedTag(tag)) {
 				// platform built-in elements
+				// 平台内置的元素
 				vnode = new VNode(
 					config.parsePlatformTagName(tag), data, children,
 					undefined, undefined, context
 				);
 			} else if ((Ctor = resolveAsset(context.$options, 'components', tag))) {
 				// component
+				// 组件
 				vnode = createComponent(Ctor, data, context, children, tag);
 			} else {
 				// unknown or unlisted namespaced elements
 				// check at runtime because it may get assigned a namespace when its
 				// parent normalizes children
+				// 未知的或未上市的命名空间的元素在运行时检查因为它可能被分配一个命名空间当它的父标准化子的时候
 				vnode = new VNode(
 					tag, data, children,
 					undefined, undefined, context
@@ -2452,6 +2457,7 @@
 			}
 		} else {
 			// direct component options / constructor
+			// 直接组件选项/构造函数
 			vnode = createComponent(tag, data, context, children);
 		}
 		if (vnode) {
@@ -2468,6 +2474,7 @@
 		vnode.ns = ns;
 		if (vnode.tag === 'foreignObject') {
 			// use default namespace inside foreignObject
+			// 内部的foreignObject使用默认的命名空间
 			return
 		}
 		if (vnode.children) {
@@ -2483,8 +2490,8 @@
 	/*  */
 
 	function initRender(vm) {
-		vm.$vnode = null; // the placeholder node in parent tree
-		vm._vnode = null; // the root of the child tree
+		vm.$vnode = null; // the placeholder node in parent tree 父树中的占位节点
+		vm._vnode = null; // the root of the child tree 子树的根
 		vm._staticTrees = null;
 		var parentVnode = vm.$options._parentVnode;
 		var renderContext = parentVnode && parentVnode.context;
@@ -2494,16 +2501,21 @@
 		// so that we get proper render context inside it.
 		// args order: tag, data, children, normalizationType, alwaysNormalize
 		// internal version is used by render functions compiled from templates
+		// 绑定createElement函数到这个实例上，这样我们得到适当的渲染上下文在里面。
+		// 参数顺序：tag,data,children,normalizationType。
+		// 渲染函数从模板编译总是标准化的内部版本
 		vm._c = function(a, b, c, d) {
 			return createElement(vm, a, b, c, d, false);
 		};
 		// normalization is always applied for the public version, used in
 		// user-written render functions.
+		// 标准化总是公共版本时应用。
+		// 使用在用户自己写的渲染函数。
 		vm.$createElement = function(a, b, c, d) {
 			return createElement(vm, a, b, c, d, true);
 		};
 	}
-
+	// renderMixin begin
 	function renderMixin(Vue) {
 		Vue.prototype.$nextTick = function(fn) {
 			return nextTick(fn, this)
@@ -2518,6 +2530,7 @@
 
 			if (vm._isMounted) {
 				// clone slot nodes on re-renders
+				// 克隆槽节点重新渲染
 				for (var key in vm.$slots) {
 					vm.$slots[key] = cloneVNodes(vm.$slots[key]);
 				}
@@ -2532,6 +2545,7 @@
 			}
 			// set parent vnode. this allows render functions to have access
 			// to the data on the placeholder node.
+			// 设置父节点。这使得渲染函数可以访问占位符节点上的数据。
 			vm.$vnode = _parentVnode;
 			// render self
 			var vnode;
@@ -2548,9 +2562,11 @@
 					throw e
 				}
 				// return previous vnode to prevent render error causing blank component
+				// 返回之前的vnode防止渲染错误造成空白组件
 				vnode = vm._vnode;
 			}
 			// return empty vnode in case the render function errored out
+			// 返回空vnode以防渲染功能错误
 			if (!(vnode instanceof VNode)) {
 				if ("development" !== 'production' && Array.isArray(vnode)) {
 					warn(
@@ -2562,10 +2578,12 @@
 				vnode = createEmptyVNode();
 			}
 			// set parent
+			// 设置parent
 			vnode.parent = _parentVnode;
 			return vnode
 		};
 
+		//设置几个常用方法到Vue原型上。
 		// toString for mustaches
 		Vue.prototype._s = _toString;
 		// convert text to vnode
@@ -2580,6 +2598,7 @@
 		Vue.prototype._i = looseIndexOf;
 
 		// render static tree by index
+		// 通过索引渲染静态树
 		Vue.prototype._m = function renderStatic(
 			index,
 			isInFor
@@ -2587,16 +2606,20 @@
 			var tree = this._staticTrees[index];
 			// if has already-rendered static tree and not inside v-for,
 			// we can reuse the same tree by doing a shallow clone.
+			// 如果已经渲染过静态树而且不是在v-for里面。
+			// 我们可以通过浅复制使用一样的树。
 			if (tree && !isInFor) {
 				return Array.isArray(tree) ? cloneVNodes(tree) : cloneVNode(tree)
 			}
 			// otherwise, render a fresh tree.
+			// 其他情况，渲染新树。
 			tree = this._staticTrees[index] = this.$options.staticRenderFns[index].call(this._renderProxy);
 			markStatic(tree, ("__static__" + index), false);
 			return tree
 		};
 
 		// mark node as static (v-once)
+		// 标记节点是静态的。v-once情况？
 		Vue.prototype._o = function markOnce(
 			tree,
 			index,
@@ -2605,7 +2628,7 @@
 			markStatic(tree, ("__once__" + index + (key ? ("_" + key) : "")), true);
 			return tree
 		};
-
+		//标记静态
 		function markStatic(tree, key, isOnce) {
 			if (Array.isArray(tree)) {
 				for (var i = 0; i < tree.length; i++) {
@@ -2617,7 +2640,7 @@
 				markStaticNode(tree, key, isOnce);
 			}
 		}
-
+		//标记静态节点 
 		function markStaticNode(node, key, isOnce) {
 			node.isStatic = true;
 			node.key = key;
@@ -2625,11 +2648,13 @@
 		}
 
 		// filter resolution helper
+		// 过滤器解决助手
 		Vue.prototype._f = function resolveFilter(id) {
 			return resolveAsset(this.$options, 'filters', id, true) || identity
 		};
 
 		// render v-for
+		// 渲染v-for
 		Vue.prototype._l = function renderList(
 			val,
 			render
@@ -2657,6 +2682,7 @@
 		};
 
 		// renderSlot
+		// 渲染插槽
 		Vue.prototype._t = function(
 			name,
 			fallback,
@@ -2664,7 +2690,7 @@
 			bindObject
 		) {
 			var scopedSlotFn = this.$scopedSlots[name];
-			if (scopedSlotFn) { // scoped slot
+			if (scopedSlotFn) { // scoped slot作用域插槽
 				props = props || {};
 				if (bindObject) {
 					extend(props, bindObject);
@@ -2673,6 +2699,7 @@
 			} else {
 				var slotNodes = this.$slots[name];
 				// warn duplicate slot usage
+				// 警告重复槽使用
 				if (slotNodes && "development" !== 'production') {
 					slotNodes._rendered && warn(
 						"Duplicate presence of slot \"" + name + "\" found in the same render tree " +
@@ -2686,6 +2713,7 @@
 		};
 
 		// apply v-bind object
+		// 应用v-bind对象
 		Vue.prototype._b = function bindProps(
 			data,
 			tag,
@@ -2717,6 +2745,7 @@
 		};
 
 		// check v-on keyCodes
+		// 检查v-on键码
 		Vue.prototype._k = function checkKeyCodes(
 			eventKeyCode,
 			key,
@@ -2730,7 +2759,8 @@
 			}
 		};
 	}
-
+	// renderMixin end
+	
 	function resolveSlots(
 		children,
 		context
