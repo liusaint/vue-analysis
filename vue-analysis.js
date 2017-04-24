@@ -3556,11 +3556,13 @@
 		var keys = vm.$options._propKeys = Object.keys(props);
 		var isRoot = !vm.$parent;
 		// root instance props should be converted
+		// 根实例的属性应该被转变。
 		observerState.shouldConvert = isRoot;
 		var loop = function(i) {
 			var key = keys[i];
 			/* istanbul ignore else */
 			{
+				//是否保留的key
 				if (isReservedProp[key]) {
 					warn(
 						("\"" + key + "\" is a reserved attribute and cannot be used as component prop."),
@@ -3597,6 +3599,7 @@
 			);
 		}
 		// proxy data on instance
+		// 代理实例上的数据
 		var keys = Object.keys(data);
 		var props = vm.$options.props;
 		var i = keys.length;
@@ -3612,9 +3615,10 @@
 			}
 		}
 		// observe data
+		// 观察数据
 		observe(data, true /* asRootData */ );
 	}
-
+	//计算后的共享定义???
 	var computedSharedDefinition = {
 		enumerable: true,
 		configurable: true,
@@ -3658,7 +3662,7 @@
 			return watcher.value
 		}
 	}
-
+	//绑定methods中的方法到vm上。
 	function initMethods(vm, methods) {
 		for (var key in methods) {
 			vm[key] = methods[key] == null ? noop : bind$1(methods[key], vm);
@@ -3701,6 +3705,8 @@
 		// flow somehow has problems with directly declared definition object
 		// when using Object.defineProperty, so we have to procedurally build up
 		// the object here.
+		// 流有时候在使用Object.defineProperty直接声明定义对象时会有问题。
+		// 所以我们必须程序上的创建对象在这里。
 		var dataDef = {};
 		dataDef.get = function() {
 			return this._data
@@ -3735,7 +3741,7 @@
 			}
 		};
 	}
-
+	//代理vm上的key
 	function proxy(vm, key) {
 		if (!isReserved(key)) {
 			Object.defineProperty(vm, key, {
@@ -3761,12 +3767,15 @@
 			// a uid
 			vm._uid = uid++;
 			// a flag to avoid this being observed
+			// 一个标志以避免被观察
 			vm._isVue = true;
 			// merge options
+			// 合并选项
 			if (options && options._isComponent) {
 				// optimize internal component instantiation
 				// since dynamic options merging is pretty slow, and none of the
 				// internal component options needs special treatment.
+				// 优化内部组件实例化，因为动态选项合并是相当缓慢的，并且没有内部组件选项需要特殊处理。
 				initInternalComponent(vm, options);
 			} else {
 				vm.$options = mergeOptions(
@@ -3796,6 +3805,7 @@
 	function initInternalComponent(vm, options) {
 		var opts = vm.$options = Object.create(vm.constructor.options);
 		// doing this because it's faster than dynamic enumeration.
+		// 这样做是因为比动态列举快。
 		opts.parent = options.parent;
 		opts.propsData = options.propsData;
 		opts._parentVnode = options._parentVnode;
@@ -3809,7 +3819,7 @@
 			opts.staticRenderFns = options.staticRenderFns;
 		}
 	}
-
+	//处理constructor上的选项。
 	function resolveConstructorOptions(Ctor) {
 		var options = Ctor.options;
 		if (Ctor.super) {
@@ -3849,7 +3859,7 @@
 	lifecycleMixin(Vue$3);
 	renderMixin(Vue$3);
 
-	/*  */
+	/* 返回插件使用的方法 */
 
 	function initUse(Vue) {
 		Vue.use = function(plugin) {
@@ -3858,6 +3868,7 @@
 				return
 			}
 			// additional parameters
+			// 附加的参数
 			var args = toArray(arguments, 1);
 			args.unshift(this);
 			if (typeof plugin.install === 'function') {
@@ -3885,12 +3896,15 @@
 		 * Each instance constructor, including Vue, has a unique
 		 * cid. This enables us to create wrapped "child
 		 * constructors" for prototypal inheritance and cache them.
+		 * 每个实例构造器，包括vue,都有一个独特的cid。
+		 * 这使我们可以创建‘外包子构造器’来实现原型链继承并缓存它们。
 		 */
 		Vue.cid = 0;
 		var cid = 1;
 
 		/**
 		 * Class inheritance
+		 * 类继承
 		 */
 		Vue.extend = function(extendOptions) {
 			extendOptions = extendOptions || {};
@@ -3921,24 +3935,30 @@
 			);
 			Sub['super'] = Super;
 			// allow further extension/mixin/plugin usage
+			// 允许更远的延伸、混合、插件使用。
 			Sub.extend = Super.extend;
 			Sub.mixin = Super.mixin;
 			Sub.use = Super.use;
 			// create asset registers, so extended classes
 			// can have their private assets too.
+			// 创建资产登记，所以拓展类可以有它们自己私有的财产。
 			config._assetTypes.forEach(function(type) {
 				Sub[type] = Super[type];
 			});
 			// enable recursive self-lookup
+			// 使递归地自我检查
 			if (name) {
 				Sub.options.components[name] = Sub;
 			}
 			// keep a reference to the super options at extension time.
 			// later at instantiation we can check if Super's options have
 			// been updated.
+			// 继承时保存一个引用到超类的选项，
+			// 然后在实例化的时候 我们可以检查超类的选项有没有被更新。
 			Sub.superOptions = Super.options;
 			Sub.extendOptions = extendOptions;
 			// cache constructor
+			// 缓存构造器。
 			cachedCtors[SuperId] = Sub;
 			return Sub
 		};
@@ -3949,6 +3969,7 @@
 	function initAssetRegisters(Vue) {
 		/**
 		 * Create asset registration methods.
+		 * 创建财产注册的方法。
 		 */
 		config._assetTypes.forEach(function(type) {
 			Vue[type] = function(
@@ -3987,11 +4008,11 @@
 	/*  */
 
 	var patternTypes = [String, RegExp];
-
+	//返回组件名字
 	function getComponentName(opts) {
 		return opts && (opts.Ctor.options.name || opts.tag)
 	}
-
+	//???
 	function matches(pattern, name) {
 		if (typeof pattern === 'string') {
 			return pattern.split(',').indexOf(name) > -1
