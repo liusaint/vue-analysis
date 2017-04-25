@@ -4020,7 +4020,7 @@
 			return pattern.test(name)
 		}
 	}
-
+	//使用过滤器删减缓存。
 	function pruneCache(cache, filter) {
 		for (var key in cache) {
 			var cachedNode = cache[key];
@@ -4033,7 +4033,7 @@
 			}
 		}
 	}
-
+	//从缓存中删除一个节点
 	function pruneCacheEntry(vnode) {
 		if (vnode) {
 			if (!vnode.componentInstance._inactive) {
@@ -4042,7 +4042,7 @@
 			vnode.componentInstance.$destroy();
 		}
 	}
-
+	//常驻
 	var KeepAlive = {
 		name: 'keep-alive',
 		abstract: true,
@@ -4081,7 +4081,7 @@
 			var vnode = getFirstComponentChild(this.$slots.default);
 			var componentOptions = vnode && vnode.componentOptions;
 			if (componentOptions) {
-				// check pattern
+				// check pattern 
 				var name = getComponentName(componentOptions);
 				if (name && (
 						(this.include && !matches(this.include, name)) ||
@@ -4092,6 +4092,7 @@
 				var key = vnode.key == null
 					// same constructor may get registered as different local components
 					// so cid alone is not enough (#3269)
+					// 部分构造器可能注册为不同的本地组件，所以使用单独cid是不够的。
 					?
 					componentOptions.Ctor.cid + (componentOptions.tag ? ("::" + (componentOptions.tag)) : '') : vnode.key;
 				if (this.cache[key]) {
@@ -4109,14 +4110,16 @@
 		KeepAlive: KeepAlive
 	};
 
-	/*  */
+	/* 初始化全局的API */
 
 	function initGlobalAPI(Vue) {
 		// config
 		var configDef = {};
 		configDef.get = function() {
 			return config;
-		}; {
+		}; 
+		{
+			//不要替换Vue.config。使用部分个别字段。
 			configDef.set = function() {
 				warn(
 					'Do not replace the Vue.config object, set individual fields instead.'
@@ -4136,6 +4139,7 @@
 
 		// this is used to identify the "base" constructor to extend all plain-object
 		// components with in Weex's multi-instance scenarios.
+		// 这是用于确定'base'构造器以拓展所有的平的对象组件 在weex的多实例场景。
 		Vue.options._base = Vue;
 
 		extend(Vue.options.components, builtInComponents);
@@ -4157,6 +4161,7 @@
 	/*  */
 
 	// attributes that should be using props for binding
+	// 应该用props来绑定的属性。
 	var acceptValue = makeMap('input,textarea,option,select');
 	var mustUseProp = function(tag, type, attr) {
 		return (
@@ -4168,7 +4173,7 @@
 	};
 
 	var isEnumeratedAttr = makeMap('contenteditable,draggable,spellcheck');
-
+	//布尔类型的attr
 	var isBooleanAttr = makeMap(
 		'allowfullscreen,async,autofocus,autoplay,checked,compact,controls,declare,' +
 		'default,defaultchecked,defaultmuted,defaultselected,defer,disabled,' +
@@ -4232,7 +4237,7 @@
 	function concat(a, b) {
 		return a ? b ? (a + ' ' + b) : a : (b || '')
 	}
-
+	//动态css转换成字符串返回
 	function stringifyClass(value) {
 		var res = '';
 		if (!value) {
@@ -4287,6 +4292,7 @@
 
 	// this map is intentionally selective, only covering SVG elements that may
 	// contain child elements.
+	// 这个是故意选择性 的，只覆盖了svg元素可能包含的子元素。
 	var isSVG = makeMap(
 		'svg,animate,circle,clippath,cursor,defs,desc,ellipse,filter,' +
 		'font-face,g,glyph,image,line,marker,mask,missing-glyph,path,pattern,' +
@@ -4308,13 +4314,15 @@
 		}
 		// basic support for MathML
 		// note it doesn't support other MathML elements being component roots
+		// 对mathML的基础支持。
+		// 注意它不支持其他MathML元素作为组件根时。
 		if (tag === 'math') {
 			return 'math'
 		}
 	}
 
 	var unknownElementCache = Object.create(null);
-
+	// 返回未知的元素标签???
 	function isUnknownElement(tag) {
 		/* istanbul ignore if */
 		if (!inBrowser) {
@@ -4360,7 +4368,7 @@
 		return el
 	}
 
-	/*  */
+	/* 创建元素 */
 
 	function createElement$1(tagName, vnode) {
 		var elm = document.createElement(tagName);
@@ -4417,7 +4425,7 @@
 		node.setAttribute(key, val);
 	}
 
-
+	//节点操作方法。冻结
 	var nodeOps = Object.freeze({
 		createElement: createElement$1,
 		createElementNS: createElementNS,
