@@ -4492,12 +4492,16 @@
 	 * Licensed under the MIT License
 	 * https://github.com/paldepind/snabbdom/blob/master/LICENSE
 	 *
+	 * 虚拟dom基于Snabbdom。
+	 * http://www.jianshu.com/p/b461657e49c0
+	 * 
 	 * modified by Evan You (@yyx990803)
 	 *
 
 	/*
 	 * Not type-checking this because this file is perf-critical and the cost
 	 * of making flow understand it is not worth it.
+	 * 不是因为这个文件类型检查是关键，完善的制作成本流的理解它是不值得的。
 	 */
 
 	var emptyNode = new VNode('', {}, []);
@@ -4533,6 +4537,8 @@
 		return map
 	}
 
+	// console.log(createKeyToOldIdx([{key:1},{key:2},{key:3},{key:4},{key:5}],2,3),'here')
+
 	function createPatchFunction(backend) {
 		var i, j;
 		var cbs = {};
@@ -4566,6 +4572,7 @@
 		function removeNode(el) {
 			var parent = nodeOps.parentNode(el);
 			// element may have already been removed due to v-html / v-text
+			// 元素可能已经被移除因为v-html或v-text
 			if (parent) {
 				nodeOps.removeChild(parent, el);
 			}
@@ -4574,7 +4581,7 @@
 		var inPre = 0;
 
 		function createElm(vnode, insertedVnodeQueue, parentElm, refElm, nested) {
-			vnode.isRootInsert = !nested; // for transition enter check
+			vnode.isRootInsert = !nested; // for transition enter check 为了过渡进入检查
 			if (createComponent(vnode, insertedVnodeQueue, parentElm, refElm)) {
 				return
 			}
@@ -4635,6 +4642,9 @@
 				// it should've created a child instance and mounted it. the child
 				// component also has set the placeholder vnode's elm.
 				// in that case we can just return the element and be done.
+				// 运行初始化的钩子后，如果vnode是一个子组件 ，它应该已经创建 了一个子实例并且已经安装 了。
+				// 这个子组件 也有设置点位节点的元素。
+				// 此时我们只用返回这个元素。
 				if (isDef(vnode.componentInstance)) {
 					initComponent(vnode, insertedVnodeQueue);
 					if (isReactivated) {
@@ -4656,8 +4666,11 @@
 			} else {
 				// empty component root.
 				// skip all element-related modules except for ref (#3455)
+				// 空组件根。
+				// 跳过ref之外的所有元素模块。
 				registerRef(vnode);
 				// make sure to invoke the insert hook
+				// 确保调用插入的钩子
 				insertedVnodeQueue.push(vnode);
 			}
 		}
@@ -4668,6 +4681,9 @@
 			// does not trigger because the inner node's created hooks are not called
 			// again. It's not ideal to involve module-specific logic in here but
 			// there doesn't seem to be a better way to do it.
+			// 一个响应的组件内部含有过滤不能trigger因为内部节点的 created钩子不会再次调用。
+			// 在这里包含具体的模块逻辑并不是很理想，
+			// 但是暂时似乎没有更好的办法。
 			var innerNode = vnode;
 			while (innerNode.componentInstance) {
 				innerNode = innerNode.componentInstance._vnode;
@@ -4681,6 +4697,8 @@
 			}
 			// unlike a newly created component,
 			// a reactivated keep-alive component doesn't insert itself
+			// 跟一个新创建的组件不一样。
+			// 一个响应的keep-alive组件不会插入本身。
 			insert(parentElm, vnode.elm, refElm);
 		}
 
@@ -4715,7 +4733,7 @@
 			for (var i$1 = 0; i$1 < cbs.create.length; ++i$1) {
 				cbs.create[i$1](emptyNode, vnode);
 			}
-			i = vnode.data.hook; // Reuse variable
+			i = vnode.data.hook; // Reuse variable 重用变量
 			if (isDef(i)) {
 				if (i.create) {
 					i.create(emptyNode, vnode);
@@ -4729,6 +4747,7 @@
 		// set scope id attribute for scoped CSS.
 		// this is implemented as a special case to avoid the overhead
 		// of going through the normal attribute patching process.
+		// 设置作用域范围ID属性的CSS。这是实现作为一个特殊的情况下，以避免开销，通过正常的属性修补过程。
 		function setScope(vnode) {
 			var i;
 			if (isDef(i = vnode.context) && isDef(i = i.$options._scopeId)) {
@@ -4784,13 +4803,16 @@
 				var listeners = cbs.remove.length + 1;
 				if (!rm) {
 					// directly removing
+					// 直接移除
 					rm = createRmCb(vnode.elm, listeners);
 				} else {
 					// we have a recursively passed down rm callback
 					// increase the listeners count
+					// 递归回调的RM回调增加侦听器计数
 					rm.listeners += listeners;
 				}
 				// recursively invoke hooks on child component root node
+				// 递归地调用子组件根节点上的钩子
 				if (isDef(i = vnode.componentInstance) && isDef(i = i._vnode) && isDef(i.data)) {
 					removeAndInvokeRemoveHook(i, rm);
 				}
@@ -4821,11 +4843,13 @@
 			// removeOnly is a special flag used only by <transition-group>
 			// to ensure removed elements stay in correct relative positions
 			// during leaving transitions
+			// removeonly是一个特殊标志，
+			// 只在<transition-group>用来确保离开转换期间移除的元素保持正确的相对位置
 			var canMove = !removeOnly;
 
 			while (oldStartIdx <= oldEndIdx && newStartIdx <= newEndIdx) {
 				if (isUndef(oldStartVnode)) {
-					oldStartVnode = oldCh[++oldStartIdx]; // Vnode has been moved left
+					oldStartVnode = oldCh[++oldStartIdx]; // Vnode has been moved left。 Vnode左移
 				} else if (isUndef(oldEndVnode)) {
 					oldEndVnode = oldCh[--oldEndIdx];
 				} else if (sameVnode(oldStartVnode, newStartVnode)) {
@@ -4836,12 +4860,12 @@
 					patchVnode(oldEndVnode, newEndVnode, insertedVnodeQueue);
 					oldEndVnode = oldCh[--oldEndIdx];
 					newEndVnode = newCh[--newEndIdx];
-				} else if (sameVnode(oldStartVnode, newEndVnode)) { // Vnode moved right
+				} else if (sameVnode(oldStartVnode, newEndVnode)) { // Vnode moved right。Vnode右移
 					patchVnode(oldStartVnode, newEndVnode, insertedVnodeQueue);
 					canMove && nodeOps.insertBefore(parentElm, oldStartVnode.elm, nodeOps.nextSibling(oldEndVnode.elm));
 					oldStartVnode = oldCh[++oldStartIdx];
 					newEndVnode = newCh[--newEndIdx];
-				} else if (sameVnode(oldEndVnode, newStartVnode)) { // Vnode moved left
+				} else if (sameVnode(oldEndVnode, newStartVnode)) { // Vnode moved left。 Vnode左移
 					patchVnode(oldEndVnode, newStartVnode, insertedVnodeQueue);
 					canMove && nodeOps.insertBefore(parentElm, oldEndVnode.elm, oldStartVnode.elm);
 					oldEndVnode = oldCh[--oldEndIdx];
@@ -4851,7 +4875,7 @@
 						oldKeyToIdx = createKeyToOldIdx(oldCh, oldStartIdx, oldEndIdx);
 					}
 					idxInOld = isDef(newStartVnode.key) ? oldKeyToIdx[newStartVnode.key] : null;
-					if (isUndef(idxInOld)) { // New element
+					if (isUndef(idxInOld)) { // New element。 新元素。
 						createElm(newStartVnode, insertedVnodeQueue, parentElm, oldStartVnode.elm);
 						newStartVnode = newCh[++newStartIdx];
 					} else {
@@ -4870,6 +4894,8 @@
 							newStartVnode = newCh[++newStartIdx];
 						} else {
 							// same key but different element. treat as new element
+							// 相同的key但是不同的元素。
+							// 当做新元素对待。
 							createElm(newStartVnode, insertedVnodeQueue, parentElm, oldStartVnode.elm);
 							newStartVnode = newCh[++newStartIdx];
 						}
@@ -4892,6 +4918,10 @@
 			// note we only do this if the vnode is cloned -
 			// if the new node is not cloned it means the render functions have been
 			// reset by the hot-reload-api and we need to do a proper re-render.
+			// 为静态树重用元素。
+			// 请注意我们只这样做当vnode被克隆--
+			// 如果新节点不是克隆的意味着渲染函数被重置通过热重载的api。
+			// 我们需要做适当的重渲染。
 			if (vnode.isStatic &&
 				oldVnode.isStatic &&
 				vnode.key === oldVnode.key &&
@@ -4945,6 +4975,8 @@
 		function invokeInsertHook(vnode, queue, initial) {
 			// delay insert hooks for component root nodes, invoke them after the
 			// element is really inserted
+			// 延迟组件根节点插入钩子的执行。
+			// 在元素真正插入后再执行。
 			if (initial && vnode.parent) {
 				vnode.parent.data.pendingInsert = queue;
 			} else {
@@ -4957,9 +4989,11 @@
 		var bailed = false;
 		// list of modules that can skip create hook during hydration because they
 		// are already rendered on the client or has no need for initialization
+		// 在水合作用时可以跳过创建钩子的模块列表， 因为他们已经渲染在客户端或不需要初始化
 		var isRenderedModule = makeMap('attrs,style,class,staticClass,staticStyle,key');
 
 		// Note: this is a browser-only function so we can assume elms are DOM nodes.
+		// 注意：这是一个只在浏览器下运行的函数，所以我们可以假定元素是dom节点 。
 		function hydrate(elm, vnode, insertedVnodeQueue) {
 			{
 				if (!assertNodeMatch(elm, vnode)) {
