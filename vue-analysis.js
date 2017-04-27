@@ -5010,6 +5010,7 @@
 				}
 				if (isDef(i = vnode.componentInstance)) {
 					// child component. it should have hydrated its own tree.
+					// 子组件。它的应该有hydrated它自已的树。
 					initComponent(vnode, insertedVnodeQueue);
 					return true
 				}
@@ -5017,6 +5018,7 @@
 			if (isDef(tag)) {
 				if (isDef(children)) {
 					// empty element, allow client to pick up and populate children
+					// 空元素,允许客户端接和填充的孩子
 					if (!elm.hasChildNodes()) {
 						createChildren(vnode, children, insertedVnodeQueue);
 					} else {
@@ -5031,6 +5033,7 @@
 						}
 						// if childNode is not null, it means the actual childNodes list is
 						// longer than the virtual children list.
+						// 如果子节点不是null。意味着实际的子节点列表比虚拟的要长。
 						if (!childrenMatch || childNode) {
 							if ("development" !== 'production' &&
 								typeof console !== 'undefined' &&
