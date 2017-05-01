@@ -6311,6 +6311,7 @@
 	/*  */
 
 	// recursively search for possible transition defined inside the component root
+	// 递归搜索可能的转变在组件中根中定义的
 	function locateNode(vnode) {
 		return vnode.componentInstance && (!vnode.data || !vnode.data.transition) ? locateNode(vnode.componentInstance._vnode) : vnode
 	}
@@ -6381,6 +6382,8 @@
 
 	// Provides transition support for a single element/component.
 	// supports transition mode (out-in / in-out)
+	// 提供过渡对单个元素/组件的支持
+	// 支持过渡模式 (out-in / in-out)
 
 	var transitionProps = {
 		name: String,
@@ -6401,6 +6404,8 @@
 
 	// in case the child is also an abstract component, e.g. <keep-alive>
 	// we want to recursively retrieve the real component to be rendered
+	// 如果孩子也是一个抽象组件，如<keep-alive>
+	// 我们想要递归检索渲染真正的组件
 	function getRealChild(vnode) {
 		var compOptions = vnode && vnode.componentOptions;
 		if (compOptions && compOptions.Ctor.options.abstract) {
@@ -6414,11 +6419,14 @@
 		var data = {};
 		var options = comp.$options;
 		// props
+		// 属性
 		for (var key in options.propsData) {
 			data[key] = comp[key];
 		}
 		// events.
 		// extract listeners and pass them directly to the transition methods
+		// 事件
+		// 提取听众和直接传递给过渡的方法
 		var listeners = options._parentListeners;
 		for (var key$1 in listeners) {
 			data[camelize(key$1)] = listeners[key$1].fn;
@@ -6456,6 +6464,7 @@
 			}
 
 			// filter out text nodes (possible whitespaces)
+			// 过滤掉文本节点
 			children = children.filter(function(c) {
 				return c.tag;
 			});
@@ -6465,6 +6474,7 @@
 			}
 
 			// warn multiple elements
+			// 警告多个元素
 			if ("development" !== 'production' && children.length > 1) {
 				warn(
 					'<transition> can only be used on a single element. Use ' +
@@ -6476,6 +6486,7 @@
 			var mode = this.mode;
 
 			// warn invalid mode
+			// 警告无效的模式
 			if ("development" !== 'production' &&
 				mode && mode !== 'in-out' && mode !== 'out-in') {
 				warn(
@@ -6488,12 +6499,15 @@
 
 			// if this is a component root node and the component's
 			// parent container node also has transition, skip.
+			// 如果这是一个根节点组件且组件的父容器节点也有过渡,跳过
 			if (hasParentTransition(this.$vnode)) {
 				return rawChild
 			}
 
 			// apply transition data to child
 			// use getRealChild() to ignore abstract components e.g. keep-alive
+			//应用数据过渡到孩子。
+			//使用getRealChild()忽视抽象组件如keep-alive
 			var child = getRealChild(rawChild);
 			/* istanbul ignore if */
 			if (!child) {
@@ -6507,6 +6521,7 @@
 			// ensure a key that is unique to the vnode type and to this transition
 			// component instance. This key will be used to remove pending leaving nodes
 			// during entering.
+			// 确保关键vnode类型和独有这过渡组件实例。这主要将用于消除等待离开节点在进入。
 			var id = "__transition-" + (this._uid) + "-";
 			var key = child.key = child.key == null ? id + child.tag : isPrimitive(child.key) ? (String(child.key).indexOf(id) === 0 ? child.key : id + child.key) : child.key;
 			var data = (child.data || (child.data = {})).transition = extractTransitionData(this);
@@ -6515,6 +6530,7 @@
 
 			// mark v-show
 			// so that the transition module can hand over the control to the directive
+			// 使过渡模块能将控制权移交给指令
 			if (child.data.directives && child.data.directives.some(function(d) {
 					return d.name === 'show';
 				})) {
@@ -6524,10 +6540,14 @@
 			if (oldChild && oldChild.data && !isSameChild(child, oldChild)) {
 				// replace old child transition data with fresh one
 				// important for dynamic transitions!
+				// 用新的取代旧的孩子过渡数据
+				// 对动态transitions很重要。
 				var oldData = oldChild && (oldChild.data.transition = extend({}, data));
 				// handle transition mode
+				// 处理过滤模式
 				if (mode === 'out-in') {
 					// return placeholder node and queue update when leave finishes
+					// 返回占位符节点，队列更新当结束finishes时
 					this._leaving = true;
 					mergeVNodeHook(oldData, 'afterLeave', function() {
 						this$1._leaving = false;
@@ -6563,6 +6583,16 @@
 	// triggering their leaving transition; in the second pass, we insert/move
 	// into the final disired state. This way in the second pass removed
 	// nodes will remain where they should be.
+	// 
+	// 提供过渡支持列表项
+	// 使用FLIP技术支持移动过渡。
+	// 
+	// 因为vdom的孩子更新算法是“不稳定的”
+	// 它不保证删除元素的相对定位，
+	// 我们强制转变组更新其孩子到两个传递：
+	// 在第一遍,我们删除所有需要移除的节点，
+	// 引发他们的离开过渡；
+	// 在第二步中，我们插入/移动向最终预定的状态。这种方式在第二步中移除节点仍将在它们应该在的地方。
 
 	var props = extend({
 		tag: String,
@@ -6619,11 +6649,12 @@
 
 		beforeUpdate: function beforeUpdate() {
 			// force removing pass
+			// 强制移除pass
 			this.__patch__(
 				this._vnode,
 				this.kept,
 				false, // hydrating
-				true // removeOnly (!important, avoids unnecessary moves)
+				true // removeOnly (!important, avoids unnecessary moves) 重要，避免不必要的移除。
 			);
 			this._vnode = this.kept;
 		},
@@ -6637,11 +6668,13 @@
 
 			// we divide the work into three loops to avoid mixing DOM reads and writes
 			// in each iteration - which helps prevent layout thrashing.
+			// 我们把工作分成三个循环,避免混合DOM的读和写在每个迭代中,这有助于防止布局抖动。
 			children.forEach(callPendingCbs);
 			children.forEach(recordPosition);
 			children.forEach(applyTranslation);
 
 			// force reflow to put everything in position
+			// 强制回流将一切的位置
 			var f = document.body.offsetHeight; // eslint-disable-line
 
 			children.forEach(function(c) {
@@ -6714,19 +6747,23 @@
 	/*  */
 
 	// install platform specific utils
+	// 安装特定于平台的工具
 	Vue$3.config.isUnknownElement = isUnknownElement;
 	Vue$3.config.isReservedTag = isReservedTag;
 	Vue$3.config.getTagNamespace = getTagNamespace;
 	Vue$3.config.mustUseProp = mustUseProp;
 
 	// install platform runtime directives & components
+	// 安装平台运行时指令和组件
 	extend(Vue$3.options.directives, platformDirectives);
 	extend(Vue$3.options.components, platformComponents);
 
 	// install platform patch function
+	// 安装平台补丁函数
 	Vue$3.prototype.__patch__ = inBrowser ? patch$1 : noop;
 
 	// wrap mount
+	// 包装上
 	Vue$3.prototype.$mount = function(
 		el,
 		hydrating
@@ -6745,6 +6782,7 @@
 	}
 
 	// devtools global hook
+	// devtools的全局钩子
 	/* istanbul ignore next */
 	setTimeout(function() {
 		if (config.devtools) {
@@ -6765,6 +6803,7 @@
 	/*  */
 
 	// check whether current browser encodes a char inside attribute values
+	// 检查是否当前浏览器编码一个char属性值内???
 	function shouldDecode(content, encoded) {
 		var div = document.createElement('div');
 		div.innerHTML = "<div a=\"" + content + "\">";
@@ -6773,6 +6812,7 @@
 
 	// #3663
 	// IE encodes newlines inside attribute values while other browsers don't
+	// ie内的attr中编码换行。其他浏览器不。
 	var shouldDecodeNewlines = inBrowser ? shouldDecode('\n', '&#10;') : false;
 
 	/*  */
@@ -6795,6 +6835,8 @@
 
 	// Elements that you can, intentionally, leave open
 	// (and which close themselves)
+	// 你可以有意不闭合的元素。
+	// 它们自己会闭合。
 	var canBeLeftOpenTag = makeMap(
 		'colgroup,dd,dt,li,options,p,td,tfoot,th,thead,tr,source',
 		true
@@ -6802,6 +6844,7 @@
 
 	// HTML5 tags https://html.spec.whatwg.org/multipage/indices.html#elements-3
 	// Phrasing Content https://html.spec.whatwg.org/multipage/dom.html#phrasing-content
+	// h5标签
 	var isNonPhrasingTag = makeMap(
 		'address,article,aside,base,blockquote,body,caption,col,colgroup,dd,' +
 		'details,dialog,div,dl,dt,fieldset,figcaption,figure,footer,form,' +
@@ -6813,6 +6856,7 @@
 
 	/**
 	 * Not type-checking this file because it's mostly vendor code.
+	 * 没有类型检查这个文件,因为它主要供应商代码。
 	 */
 
 	/*!
@@ -6820,17 +6864,24 @@
 	 * Modified by Juriy "kangax" Zaytsev
 	 * Original code by Erik Arvidsson, Mozilla Public License
 	 * http://erik.eae.net/simplehtmlparser/simplehtmlparser.js
+	 * John Resig 的HTML解析器
+	 * Juriy "kangax" Zaytsev修改
+	 * Erik Arvidsson的原始代码，Mozilla公共许可证
 	 */
 
 	// Regular Expressions for parsing tags and attributes
+	// 正则表达式解析标记和属性
 	var singleAttrIdentifier = /([^\s"'<>/=]+)/;
 	var singleAttrAssign = /(?:=)/;
 	var singleAttrValues = [
 		// attr value double quotes
+		// attr值双引号
 		/"([^"]*)"+/.source,
 		// attr value, single quotes
+		// attr值单引号
 		/'([^']*)'+/.source,
 		// attr value, no quotes
+		// attr值无引号
 		/([^\s"'=<>`]+)/.source
 	];
 	var attribute = new RegExp(
@@ -6841,6 +6892,7 @@
 
 	// could use https://www.w3.org/TR/1999/REC-xml-names-19990114/#NT-QName
 	// but for Vue templates we can enforce a simple charset
+	// 但对于Vue模板我们可以执行一个简单的字符集
 	var ncname = '[a-zA-Z_][\\w\\-\\.]*';
 	var qnameCapture = '((?:' + ncname + '\\:)?' + ncname + ')';
 	var startTagOpen = new RegExp('^<' + qnameCapture);
@@ -6856,6 +6908,7 @@
 	});
 
 	// Special Elements (can contain anything)
+	// 特殊元素(可以包含任何东西)
 	var isScriptOrStyle = makeMap('script,style', true);
 	var reCache = {};
 
@@ -6885,6 +6938,7 @@
 		while (html) {
 			last = html;
 			// Make sure we're not in a script or style element
+			// 确保我们不在script或style中间
 			if (!lastTag || !isScriptOrStyle(lastTag)) {
 				var textEnd = html.indexOf('<');
 				if (textEnd === 0) {
@@ -6909,6 +6963,7 @@
 					}
 
 					// Doctype:
+					//  文档类型
 					var doctypeMatch = html.match(doctype);
 					if (doctypeMatch) {
 						advance(doctypeMatch[0].length);
@@ -6916,6 +6971,7 @@
 					}
 
 					// End tag:
+					// 结束标记
 					var endTagMatch = html.match(endTag);
 					if (endTagMatch) {
 						var curIndex = index;
@@ -6925,6 +6981,7 @@
 					}
 
 					// Start tag:
+					// 开始标记
 					var startTagMatch = parseStartTag();
 					if (startTagMatch) {
 						handleStartTag(startTagMatch);
@@ -6943,6 +7000,7 @@
 						!conditionalComment.test(rest$1)
 					) {
 						// < in plain text, be forgiving and treat it as text
+						// <在纯文本,要宽容和把它作为文本
 						next = rest$1.indexOf('<', 1);
 						if (next < 0) {
 							break
@@ -6990,6 +7048,7 @@
 		}
 
 		// Clean up any remaining tags
+		// 清理剩余的标签
 		parseEndTag();
 
 		function advance(n) {
@@ -7040,6 +7099,7 @@
 			for (var i = 0; i < l; i++) {
 				var args = match.attrs[i];
 				// hackish work around FF bug https://bugzilla.mozilla.org/show_bug.cgi?id=369778
+				// 独创性的解决FF bug
 				if (IS_REGEX_CAPTURING_BROKEN && args[0].indexOf('""') === -1) {
 					if (args[3] === '') {
 						delete args[3];
@@ -7090,6 +7150,7 @@
 			}
 
 			// Find the closest opened tag of the same type
+			// 找到最接近的开放的相同类型的标签
 			if (tagName) {
 				for (pos = stack.length - 1; pos >= 0; pos--) {
 					if (stack[pos].lowerCasedTag === lowerCasedTagName) {
@@ -7098,11 +7159,13 @@
 				}
 			} else {
 				// If no tag name is provided, clean shop
+				// 如果没有提供标记名称,干净的商店???
 				pos = 0;
 			}
 
 			if (pos >= 0) {
 				// Close all the open elements, up the stack
+				// 关闭所有打开的元素,堆栈
 				for (var i = stack.length - 1; i >= pos; i--) {
 					if (options.end) {
 						options.end(stack[i].tag, start, end);
@@ -7110,6 +7173,7 @@
 				}
 
 				// Remove the open elements from the stack
+				// 从堆栈中删除开放的元素
 				stack.length = pos;
 				lastTag = pos && stack[pos - 1].tag;
 			} else if (lowerCasedTagName === 'br') {
@@ -7167,6 +7231,7 @@
 			) {
 				if (expression === undefined) {
 					// first filter, end of expression
+					// 第一个过滤器,表达式结尾
 					lastFilterIndex = i + 1;
 					expression = exp.slice(0, i).trim();
 				} else {
@@ -7206,6 +7271,7 @@
 					var j = i - 1;
 					var p = (void 0);
 					// find first non-whitespace prev char
+					// 找到第一个非空prev char
 					for (; j >= 0; j--) {
 						p = exp.charAt(j);
 						if (p !== ' ') {
@@ -7346,13 +7412,14 @@
 		important
 	) {
 		// check capture modifier
+		// 检查捕获修饰符
 		if (modifiers && modifiers.capture) {
 			delete modifiers.capture;
-			name = '!' + name; // mark the event as captured
+			name = '!' + name; // mark the event as captured事件标记为捕获
 		}
 		if (modifiers && modifiers.once) {
 			delete modifiers.once;
-			name = '~' + name; // mark the event as once
+			name = '~' + name; // mark the event as once事件标记为一次
 		}
 		var events;
 		if (modifiers && modifiers.native) {
@@ -7417,9 +7484,9 @@
 
 	/**
 	 * parse directive model to do the array update transform. a[idx] = val => $$a.splice($$idx, 1, val)
-	 *
+	 * 解析指令数组更新变换模型
 	 * for loop possible cases:
-	 *
+	 * for循环可能情况
 	 * - test
 	 * - test[idx]
 	 * - test[test1[idx]]
@@ -7427,6 +7494,7 @@
 	 * - xxx.test[a[a].test1[idx]]
 	 * - test.xxx.a["asa"][test1[idx]]
 	 *
+	 * 
 	 */
 
 	function parseModel(val) {
@@ -7514,6 +7582,7 @@
 	var decodeHTMLCached = cached(decode);
 
 	// configurable state
+	// 可配置的状态
 	var warn$1;
 	var platformGetTagNamespace;
 	var platformMustUseProp;
@@ -7525,6 +7594,7 @@
 
 	/**
 	 * Convert HTML string to AST.
+	 * 将HTML字符串转换成AST
 	 */
 	function parse(
 		template,
@@ -7552,9 +7622,12 @@
 			start: function start(tag, attrs, unary) {
 				// check namespace.
 				// inherit parent ns if there is one
+				// 检查命名空间。
+				// 继承父亲命名空间如果有
 				var ns = (currentParent && currentParent.ns) || platformGetTagNamespace(tag);
 
 				// handle IE svg bug
+				// 处理ie的svg bug
 				/* istanbul ignore if */
 				if (isIE && ns === 'svg') {
 					attrs = guardIESVGBug(attrs);
@@ -7582,6 +7655,7 @@
 				}
 
 				// apply pre-transforms
+				// 应用预过渡
 				for (var i = 0; i < preTransforms.length; i++) {
 					preTransforms[i](element, options);
 				}
@@ -7605,6 +7679,8 @@
 
 					// determine whether this is a plain element after
 					// removing structural attributes
+					// determine whether this is a plain element after removing structural attributes
+					// 确定这是一个删除结构属性的纯元素
 					element.plain = !element.key && !attrs.length;
 
 					processRef(element);
@@ -7636,11 +7712,13 @@
 				}
 
 				// tree management
+				// 树管理
 				if (!root) {
 					root = element;
 					checkRootConstraints(root);
 				} else if (!stack.length) {
 					// allow root elements with v-if, v-else-if and v-else
+					// 允许根元素有v v-else-if v-else
 					if (root.if && (element.elseif || element.else)) {
 						checkRootConstraints(element);
 						addIfCondition(root, {
@@ -7660,7 +7738,7 @@
 				if (currentParent && !element.forbidden) {
 					if (element.elseif || element.else) {
 						processIfConditions(element, currentParent);
-					} else if (element.slotScope) { // scoped slot
+					} else if (element.slotScope) { // scoped slot作用域的槽
 						currentParent.plain = false;
 						var name = element.slotTarget || 'default';
 						(currentParent.scopedSlots || (currentParent.scopedSlots = {}))[name] = element;
@@ -7674,6 +7752,7 @@
 					stack.push(element);
 				}
 				// apply post-transforms
+				// 应用转化后
 				for (var i$2 = 0; i$2 < postTransforms.length; i$2++) {
 					postTransforms[i$2](element, options);
 				}
@@ -7681,15 +7760,18 @@
 
 			end: function end() {
 				// remove trailing whitespace
+				// 删除尾随空格
 				var element = stack[stack.length - 1];
 				var lastNode = element.children[element.children.length - 1];
 				if (lastNode && lastNode.type === 3 && lastNode.text === ' ') {
 					element.children.pop();
 				}
 				// pop stack
+				// 出栈
 				stack.length -= 1;
 				currentParent = stack[stack.length - 1];
 				// check pre state
+				// 检查之前的状态
 				if (element.pre) {
 					inVPre = false;
 				}
@@ -7709,6 +7791,7 @@
 					return
 				}
 				// IE textarea placeholder bug
+				// IE textarea占位符bug
 				/* istanbul ignore if */
 				if (isIE &&
 					currentParent.tag === 'textarea' &&
@@ -7718,6 +7801,7 @@
 				var children = currentParent.children;
 				text = inPre || text.trim() ? decodeHTMLCached(text)
 					// only preserve whitespace if its not right after a starting tag
+					// 只保留空格后如果不正确的开始标记
 					:
 					preserveWhitespace && children.length ? ' ' : '';
 				if (text) {
@@ -7758,6 +7842,7 @@
 			}
 		} else if (!el.pre) {
 			// non root node in pre blocks with no attributes
+			// 非根节点在pre块没有属性
 			el.plain = true;
 		}
 	}
@@ -7909,8 +7994,10 @@
 			value = list[i].value;
 			if (dirRE.test(name)) {
 				// mark element as dynamic
+				// 元素标记为动态
 				el.hasBindings = true;
 				// modifiers
+				// 修改器
 				modifiers = parseModifiers(name);
 				if (modifiers) {
 					name = name.replace(modifierRE, '');
@@ -7939,9 +8026,9 @@
 				} else if (onRE.test(name)) { // v-on
 					name = name.replace(onRE, '');
 					addHandler(el, name, value, modifiers);
-				} else { // normal directives
+				} else { // normal directives 正常的指令
 					name = name.replace(dirRE, '');
-					// parse arg
+					// parse arg 分析参数
 					var argMatch = name.match(argRE);
 					if (argMatch && (arg = argMatch[1])) {
 						name = name.slice(0, -(arg.length + 1));
@@ -7953,6 +8040,7 @@
 				}
 			} else {
 				// literal attribute
+				// 文字属性
 				{
 					var expression = parseText(value, delimiters);
 					if (expression) {
@@ -8061,6 +8149,16 @@
 	 *    create fresh nodes for them on each re-render;
 	 * 2. Completely skip them in the patching process.
 	 */
+	/**
+	 * 优化的目标: walk AST树生成的模板
+	 * 检测纯粹是静态的子树,即
+	 * 部分不需要改变的dom
+	 *
+	 * 一旦我们发现这些点子树,我们可以:
+	 *
+	 * 1. 设为常数, 我们不再需要为他们创建新的节点在每个重新渲染;
+	 * 2. 在修补过程完全跳过它们
+	 */
 	function optimize(root, options) {
 		if (!root) {
 			return
@@ -8068,8 +8166,10 @@
 		isStaticKey = genStaticKeysCached(options.staticKeys || '');
 		isPlatformReservedTag = options.isReservedTag || no;
 		// first pass: mark all non-static nodes.
+		// 第一步:标记所有非静态节点。
 		markStatic(root);
 		// second pass: mark static roots.
+		// 第二步:马克静态的根。
 		markStaticRoots(root, false);
 	}
 
@@ -8086,6 +8186,9 @@
 			// do not make component slot content static. this avoids
 			// 1. components not able to mutate slot nodes
 			// 2. static slot content fails for hot-reloading
+			// 不要让组件槽内容静态的，可以避免：
+			// 1.组件不能突变槽节点
+			// 2.静态槽内容为hot-reloading失败
 			if (!isPlatformReservedTag(node.tag) &&
 				node.tag !== 'slot' &&
 				node.attrsMap['inline-template'] == null
@@ -8110,6 +8213,8 @@
 			// For a node to qualify as a static root, it should have children that
 			// are not just static text. Otherwise the cost of hoisting out will
 			// outweigh the benefits and it's better off to just always render it fresh.
+			// 对于一个节点作为一个静态的根,应该有孩子,不仅仅是静态文本。
+			// 否则起重的成本大于收益,它总是使它新鲜的更好。
 			if (node.static && node.children.length && !(
 					node.children.length === 1 &&
 					node.children[0].type === 3
@@ -8137,16 +8242,16 @@
 	}
 
 	function isStatic(node) {
-		if (node.type === 2) { // expression
+		if (node.type === 2) { // expression 表达式
 			return false
-		}
-		if (node.type === 3) { // text
+		} 
+		if (node.type === 3) { // text 文本
 			return true
 		}
-		return !!(node.pre || (!node.hasBindings && // no dynamic bindings
-			!node.if && !node.for && // not v-if or v-for or v-else
-			!isBuiltInTag(node.tag) && // not a built-in
-			isPlatformReservedTag(node.tag) && // not a component
+		return !!(node.pre || (!node.hasBindings && // no dynamic bindings 没有动态绑定
+			!node.if && !node.for && // not v-if or v-for or v-else  不是v-if or v-for or v-else 
+			!isBuiltInTag(node.tag) && // not a built-in 不是内置标签 
+			isPlatformReservedTag(node.tag) && // not a component 不是一个组件 
 			!isDirectChildOfTemplateFor(node) &&
 			Object.keys(node).every(isStaticKey)
 		))
@@ -8171,6 +8276,7 @@
 	var simplePathRE = /^\s*[A-Za-z_$][\w$]*(?:\.[A-Za-z_$][\w$]*|\['.*?']|\[".*?"]|\[\d+]|\[[A-Za-z_$][\w$]*])*\s*$/;
 
 	// keyCode aliases
+	// 键码的别名
 	var keyCodes = {
 		esc: 27,
 		tab: 9,
@@ -8262,6 +8368,7 @@
 	/*  */
 
 	// configurable state
+	// 可配置的状态
 	var warn$2;
 	var transforms$1;
 	var dataGenFns;
@@ -8276,6 +8383,7 @@
 		options
 	) {
 		// save previous staticRenderFns so generate calls can be nested
+		// 保存之前的静态渲染函数生成调用可以嵌套
 		var prevStaticRenderFns = staticRenderFns;
 		var currentStaticRenderFns = staticRenderFns = [];
 		var prevOnceCount = onceCount;
@@ -8310,6 +8418,7 @@
 			return genSlot(el)
 		} else {
 			// component or element
+			// 组件或元素
 			var code;
 			if (el.component) {
 				code = genComponent(el.component, el);
@@ -8320,6 +8429,7 @@
 				code = "_c('" + (el.tag) + "'" + (data ? ("," + data) : '') + (children ? ("," + children) : '') + ")";
 			}
 			// module transforms
+			// 模块转换
 			for (var i = 0; i < transforms$1.length; i++) {
 				code = transforms$1[i](el, code);
 			}
@@ -8328,6 +8438,7 @@
 	}
 
 	// hoist static sub-trees out
+	// 起重机静态子树时获得了
 	function genStatic(el) {
 		el.staticProcessed = true;
 		staticRenderFns.push(("with(this){return " + (genElement(el)) + "}"));
@@ -8362,7 +8473,7 @@
 	}
 
 	function genIf(el) {
-		el.ifProcessed = true; // avoid recursion
+		el.ifProcessed = true; // avoid recursion避免递归
 		return genIfConditions(el.ifConditions.slice())
 	}
 
@@ -8379,6 +8490,7 @@
 		}
 
 		// v-if with v-once should generate code like (a)?_m(0):_m(1)
+		// v-if带v-once应该生成类似这样的代码(a)? _m(0):_m(1)
 		function genTernaryExp(el) {
 			return el.once ? genOnce(el) : genElement(el)
 		}
@@ -8389,7 +8501,7 @@
 		var alias = el.alias;
 		var iterator1 = el.iterator1 ? ("," + (el.iterator1)) : '';
 		var iterator2 = el.iterator2 ? ("," + (el.iterator2)) : '';
-		el.forProcessed = true; // avoid recursion
+		el.forProcessed = true; // avoid recursion 避免递归 
 		return "_l((" + exp + ")," +
 			"function(" + alias + iterator1 + iterator2 + "){" +
 			"return " + (genElement(el)) +
@@ -8399,8 +8511,9 @@
 	function genData(el) {
 		var data = '{';
 
-		// directives first.
+		// directives first.指令优先
 		// directives may mutate the el's other properties before they are generated.
+		// 指示可能变异el的其他属性在它们创建之前。
 		var dirs = genDirectives(el);
 		if (dirs) {
 			data += dirs + ',';
@@ -8422,10 +8535,12 @@
 			data += "pre:true,";
 		}
 		// record original tag name for components using "is" attribute
+		// 使用”是“记录原始标记名称组件属性
 		if (el.component) {
 			data += "tag:\"" + (el.tag) + "\",";
 		}
 		// module data generation functions
+		// 模块数据生成函数
 		for (var i = 0; i < dataGenFns.length; i++) {
 			data += dataGenFns[i](el);
 		}
@@ -8452,7 +8567,7 @@
 		if (el.scopedSlots) {
 			data += (genScopedSlots(el.scopedSlots)) + ",";
 		}
-		// inline-template
+		// inline-template 内联模板
 		if (el.inlineTemplate) {
 			var inlineTemplate = genInlineTemplate(el);
 			if (inlineTemplate) {
@@ -8460,7 +8575,7 @@
 			}
 		}
 		data = data.replace(/,$/, '') + '}';
-		// v-bind data wrap
+		// v-bind data wrap v-bind数据包装
 		if (el.wrapData) {
 			data = el.wrapData(data);
 		}
@@ -8482,6 +8597,8 @@
 			if (gen) {
 				// compile-time directive that manipulates AST.
 				// returns true if it also needs a runtime counterpart.
+				// 编译时指令操纵AST。
+				// 返回true,如果它也需要一个运行时副本
 				needRuntime = !!gen(el, dir, warn$2);
 			}
 			if (needRuntime) {
@@ -8525,6 +8642,7 @@
 		if (children.length) {
 			var el$1 = children[0];
 			// optimize single v-for
+			// 优化单个v-for
 			if (children.length === 1 &&
 				el$1.for &&
 				el$1.tag !== 'template' &&
@@ -8540,6 +8658,10 @@
 	// 0: no normalization needed
 	// 1: simple normalization needed (possible 1-level deep nested array)
 	// 2: full normalization needed
+	// 确定所需的标准化孩子数组。
+	// 0:不需要标准化。
+	// 1:简单的标准化需要(可能1级深度嵌套的数组)
+	// 2:完全标准化
 	function getNormalizationType(children) {
 		var res = 0;
 		for (var i = 0; i < children.length; i++) {
@@ -8581,7 +8703,7 @@
 	}
 
 	function genText(text) {
-		return ("_v(" + (text.type === 2 ? text.expression // no need for () because already wrapped in _s()
+		return ("_v(" + (text.type === 2 ? text.expression // no need for () because already wrapped in _s()不需要(),因为已经包装在_s()
 			:
 			transformSpecialNewlines(JSON.stringify(text.text))) + ")")
 	}
@@ -8607,6 +8729,7 @@
 	}
 
 	// componentName is el.component, take it as argument to shun flow's pessimistic refinement
+	// componentName 是el.component,把它作为参数避开流的悲观的细节???
 	function genComponent(componentName, el) {
 		var children = el.inlineTemplate ? null : genChildren(el, true);
 		return ("_c(" + componentName + "," + (genData(el)) + (children ? ("," + children) : '') + ")")
@@ -8632,6 +8755,7 @@
 
 	/**
 	 * Compile a template.
+	 * 编译模板。
 	 */
 	function compile$1(
 		template,
@@ -8650,17 +8774,21 @@
 	/*  */
 
 	// operators like typeof, instanceof and in are allowed
+	// 运算符像 typeof, instanceof and in是允许的
 	var prohibitedKeywordRE = new RegExp('\\b' + (
 		'do,if,for,let,new,try,var,case,else,with,await,break,catch,class,const,' +
 		'super,throw,while,yield,delete,export,import,return,switch,default,' +
 		'extends,finally,continue,debugger,function,arguments'
 	).split(',').join('\\b|\\b') + '\\b');
 	// check valid identifier for v-for
+	// 检测v-for有效的标识符
 	var identRE = /[A-Za-z_$][\w$]*/;
 	// strip strings in expressions
+	// 带字符串表达式
 	var stripStringRE = /'(?:[^'\\]|\\.)*'|"(?:[^"\\]|\\.)*"|`(?:[^`\\]|\\.)*\$\{|\}(?:[^`\\]|\\.)*`|`(?:[^`\\]|\\.)*`/g;
 
 	// detect problematic expressions in a template
+	// 发现模板中有问题的表达式
 	function detectErrors(ast) {
 		var errors = [];
 		if (ast) {
@@ -8845,6 +8973,7 @@
 			genDefaultModel(el, value, modifiers);
 		}
 		// ensure runtime directive metadata
+		// 确保运行时指令元数据
 		return true
 	}
 
@@ -8946,6 +9075,8 @@
 
 		// inputs with type="file" are read only and setting the input's
 		// value will throw an error.
+		// inputs with type="file" are read only and setting the input's value will throw an error.
+		// 类型为"fIle"的input是只读的，设置vaLue将抛出一个错误。
 		if ("development" !== 'production' &&
 			type === 'file') {
 			warn$3(
@@ -9060,6 +9191,7 @@
 	) {
 		var _warn = (options && options.warn) || warn;
 		// detect possible CSP restriction
+		// 检测可能的CSP限制
 		/* istanbul ignore if */
 		{
 			try {
@@ -9134,6 +9266,7 @@
 
 		var options = this.$options;
 		// resolve template/el and convert to render function
+		// 解决模板/ el和转换成渲染函数
 		if (!options.render) {
 			var template = options.template;
 			if (template) {
