@@ -2291,8 +2291,8 @@
 	}
 
 	/* 模板编译器试图在编译时通过静态分析模板来最小化对标准化的需要。
-     * 普通的HTML标记，标准化可以完全跳过因为生成的渲染函数会保证返回数组实现的vnode。
-     * 有两种情况需要额外的标准化
+	 * 普通的HTML标记，标准化可以完全跳过因为生成的渲染函数会保证返回数组实现的vnode。
+	 * 有两种情况需要额外的标准化
 	 */
 
 	// The template compiler attempts to minimize the need for normalization by
@@ -2760,7 +2760,7 @@
 		};
 	}
 	// renderMixin end
-	
+
 	function resolveSlots(
 		children,
 		context
@@ -4117,8 +4117,7 @@
 		var configDef = {};
 		configDef.get = function() {
 			return config;
-		}; 
-		{
+		}; {
 			//不要替换Vue.config。使用部分个别字段。
 			configDef.set = function() {
 				warn(
@@ -5059,7 +5058,7 @@
 			}
 			return true
 		}
-
+		//维护节点匹配
 		function assertNodeMatch(node, vnode) {
 			if (vnode.tag) {
 				return (
@@ -5159,7 +5158,7 @@
 		}
 	}
 
-	/*  */
+	/* 指令 */
 
 	var directives = {
 		create: updateDirectives,
@@ -5260,7 +5259,7 @@
 	function getRawDirName(dir) {
 		return dir.rawName || ((dir.name) + "." + (Object.keys(dir.modifiers || {}).join('.')))
 	}
-
+	//调用指令的钩子。
 	function callHook$1(dir, hook, vnode, oldVnode, isDestroy) {
 		var fn = dir.def && dir.def[hook];
 		if (fn) {
@@ -5273,7 +5272,7 @@
 		directives
 	];
 
-	/*  */
+	/* 更新attrs */
 
 	function updateAttrs(oldVnode, vnode) {
 		if (!oldVnode.data.attrs && !vnode.data.attrs) {
@@ -5284,6 +5283,7 @@
 		var oldAttrs = oldVnode.data.attrs || {};
 		var attrs = vnode.data.attrs || {};
 		// clone observed objects, as the user probably wants to mutate it
+		//克隆观察中的对象。用户很可能会想改变的。
 		if (attrs.__ob__) {
 			attrs = vnode.data.attrs = extend({}, attrs);
 		}
@@ -5292,11 +5292,13 @@
 			cur = attrs[key];
 			old = oldAttrs[key];
 			if (old !== cur) {
+				//设置新的attrs
 				setAttr(elm, key, cur);
 			}
 		}
 		// #4391: in IE9, setting type can reset value for input[type=radio]
 		/* istanbul ignore if */
+		//ie9下。设置type单独处理。
 		if (isIE9 && attrs.value !== oldAttrs.value) {
 			setAttr(elm, 'value', attrs.value);
 		}
@@ -5342,7 +5344,7 @@
 		update: updateAttrs
 	};
 
-	/*  */
+	/* 更新class */
 
 	function updateClass(oldVnode, vnode) {
 		var el = vnode.elm;
@@ -5356,12 +5358,14 @@
 		var cls = genClassForVnode(vnode);
 
 		// handle transition classes
+		// 控制过滤的class。
 		var transitionClass = el._transitionClasses;
 		if (transitionClass) {
 			cls = concat(cls, stringifyClass(transitionClass));
 		}
 
 		// set the class
+		// 设置class
 		if (cls !== el._prevClass) {
 			el.setAttribute('class', cls);
 			el._prevClass = cls;
@@ -5376,7 +5380,7 @@
 	/*  */
 
 	var target$1;
-
+	//添加事件???
 	function add$2(
 		event,
 		handler,
@@ -5385,7 +5389,7 @@
 	) {
 		if (once) {
 			var oldHandler = handler;
-			var _target = target$1; // save current target element in closure
+			var _target = target$1; // save current target element in closure 在闭包中保存当前目标元素。
 			handler = function(ev) {
 				remove$3(event, handler, capture, _target);
 				arguments.length === 1 ? oldHandler(ev) : oldHandler.apply(null, arguments);
@@ -5393,7 +5397,7 @@
 		}
 		target$1.addEventListener(event, handler, capture);
 	}
-
+	//移除事件
 	function remove$3(
 		event,
 		handler,
@@ -5402,7 +5406,7 @@
 	) {
 		(_target || target$1).removeEventListener(event, handler, capture);
 	}
-
+	//更新dom事件。
 	function updateDOMListeners(oldVnode, vnode) {
 		if (!oldVnode.data.on && !vnode.data.on) {
 			return
@@ -5418,7 +5422,7 @@
 		update: updateDOMListeners
 	};
 
-	/*  */
+	/* 更新dom属性 */
 
 	function updateDOMProps(oldVnode, vnode) {
 		if (!oldVnode.data.domProps && !vnode.data.domProps) {
@@ -5429,6 +5433,7 @@
 		var oldProps = oldVnode.data.domProps || {};
 		var props = vnode.data.domProps || {};
 		// clone observed objects, as the user probably wants to mutate it
+		// 克隆被观察的对象。
 		if (props.__ob__) {
 			props = vnode.data.domProps = extend({}, props);
 		}
@@ -5443,6 +5448,7 @@
 			// ignore children if the node has textContent or innerHTML,
 			// as these will throw away existing DOM nodes and cause removal errors
 			// on subsequent patches (#3360)
+			// 如果节点有textContent 、innerHTML，则忽视孩子，抛弃现有DOM节点和后续补丁去除错误的原因
 			if (key === 'textContent' || key === 'innerHTML') {
 				if (vnode.children) {
 					vnode.children.length = 0;
@@ -5455,8 +5461,10 @@
 			if (key === 'value') {
 				// store value as _value as well since
 				// non-string values will be stringified
+				// 同时保存value为_value因为默认的value会被保存成字符串化之后的。
 				elm._value = cur;
 				// avoid resetting cursor position when value is the same
+				// 避免重置光标位置，当value没有改变
 				var strCur = cur == null ? '' : String(cur);
 				if (shouldUpdateValue(elm, vnode, strCur)) {
 					elm.value = strCur;
@@ -5484,15 +5492,18 @@
 
 	function isDirty(elm, checkVal) {
 		// return true when textbox (.number and .trim) loses focus and its value is not equal to the updated value
+		// 当textbox失去焦点并且它的值不等于更新后的值返回true
 		return document.activeElement !== elm && elm.value !== checkVal
 	}
 
 	function isInputChanged(vnode, newVal) {
 		var value = vnode.elm.value;
-		var modifiers = vnode.elm._vModifiers; // injected by v-model runtime
+		var modifiers = vnode.elm._vModifiers; // injected by v-model runtime v-model运行时注入
+		// number的判断
 		if ((modifiers && modifiers.number) || vnode.elm.type === 'number') {
 			return toNumber(value) !== toNumber(newVal)
 		}
+		//trim的判断
 		if (modifiers && modifiers.trim) {
 			return value.trim() !== newVal.trim()
 		}
@@ -5504,10 +5515,11 @@
 		update: updateDOMProps
 	};
 
-	/*  */
+	/* 分析style */
 
 	var parseStyleText = cached(function(cssText) {
 		var res = {};
+		//注意这个正则表达式。
 		var listDelimiter = /;(?![^(]*\))/g;
 		var propertyDelimiter = /:(.+)/;
 		cssText.split(listDelimiter).forEach(function(item) {
@@ -5520,14 +5532,18 @@
 	});
 
 	// merge static and dynamic style data on the same vnode
+	// 合并静态与动态style
 	function normalizeStyleData(data) {
 		var style = normalizeStyleBinding(data.style);
 		// static style is pre-processed into an object during compilation
 		// and is always a fresh object, so it's safe to merge into it
+		// 静态style是编译过程中被预处理进一个对象的。
+		// 并且这个对象是最新的。所以合并进它是安全的。
 		return data.staticStyle ? extend(data.staticStyle, style) : style
 	}
 
 	// normalize possible array / string values into Object
+	// 标准化处理可能的数组、字符串值到obj中
 	function normalizeStyleBinding(bindingStyle) {
 		if (Array.isArray(bindingStyle)) {
 			return toObject(bindingStyle)
@@ -5541,6 +5557,8 @@
 	/**
 	 * parent component style should be after child's
 	 * so that parent component's style could override it
+	 * 父组件styLe应该在子组件的后面
+	 * 这样父组件的样式才能覆盖它的。
 	 */
 	function getStyle(vnode, checkChild) {
 		var res = {};
@@ -5569,7 +5587,7 @@
 		return res
 	}
 
-	/*  */
+	/* css */
 
 	var cssVarRE = /^--/;
 	var importantRE = /\s*!important$/;
@@ -5578,12 +5596,13 @@
 		if (cssVarRE.test(name)) {
 			el.style.setProperty(name, val);
 		} else if (importantRE.test(val)) {
+			//设置important是这样???
 			el.style.setProperty(name, val.replace(importantRE, ''), 'important');
 		} else {
 			el.style[normalize(name)] = val;
 		}
 	};
-
+	//浏览器前缀
 	var prefixes = ['Webkit', 'Moz', 'ms'];
 
 	var testEl;
@@ -5617,6 +5636,7 @@
 		var oldStyleBinding = oldVnode.data.style || {};
 
 		// if static style exists, stylebinding already merged into it when doing normalizeStyleData
+		// 如果静态style存在。绑定style已经在normalizeStyleData被合并进去了。
 		var oldStyle = oldStaticStyle || oldStyleBinding;
 
 		var style = normalizeStyleBinding(vnode.data.style) || {};
@@ -5634,6 +5654,7 @@
 			cur = newStyle[name];
 			if (cur !== oldStyle[name]) {
 				// ie9 setting to null has no effect, must use empty string
+				// ie9设置为null无效。需要设置成空字符串。
 				setProp(el, name, cur == null ? '' : cur);
 			}
 		}
@@ -5649,6 +5670,8 @@
 	/**
 	 * Add class with compatibility for SVG since classList is not supported on
 	 * SVG elements in IE
+	 * 添加class为svg兼容
+	 * IE中classlist对svg元素不支持。
 	 */
 	function addClass(el, cls) {
 		/* istanbul ignore if */
@@ -5676,6 +5699,7 @@
 	/**
 	 * Remove class with compatibility for SVG since classList is not supported on
 	 * SVG elements in IE
+	 * 移除class
 	 */
 	function removeClass(el, cls) {
 		/* istanbul ignore if */
@@ -5702,13 +5726,14 @@
 		}
 	}
 
-	/*  */
+	/* 过渡 */
 
 	var hasTransition = inBrowser && !isIE9;
 	var TRANSITION = 'transition';
 	var ANIMATION = 'animation';
 
 	// Transition property/event sniffing
+	// 过渡属性、事件嗅探
 	var transitionProp = 'transition';
 	var transitionEndEvent = 'transitionend';
 	var animationProp = 'animation';
@@ -5728,6 +5753,8 @@
 	}
 
 	// binding to window is necessary to make hot reload work in IE in strict mode
+	// 绑定到window上是必要的。
+	// 热刷新ie下的严格模式生效。
 	var raf = inBrowser && window.requestAnimationFrame ? window.requestAnimationFrame.bind(window) : setTimeout;
 
 	function nextFrame(fn) {
@@ -5845,6 +5872,7 @@
 		var el = vnode.elm;
 
 		// call leave callback now
+		// 调用离开的回调
 		if (el._leaveCb) {
 			el._leaveCb.cancelled = true;
 			el._leaveCb();
@@ -5881,6 +5909,9 @@
 		// transition. One edge case to check is when the <transition> is placed
 		// as the root node of a child component. In that case we need to check
 		// <transition>'s parent for appear check.
+		// 激活的实例永远是<transition>组件管理过渡。
+		// 要检查的边缘情况是：将<转换> >放置为子组件的根节点时。
+		// 在这种情况下，我们需要检查<过渡>的父。
 		var context = activeInstance;
 		var transitionNode = activeInstance.$vnode;
 		while (transitionNode && transitionNode.parent) {
@@ -5907,6 +5938,7 @@
 			enterHook &&
 			// enterHook may be a bound method which exposes
 			// the length of original fn as _length
+			// enterhook可能是一个绑定的方法暴露了原来的fn的length为_length
 			(enterHook._length || enterHook.length) > 1;
 
 		var cb = el._enterCb = once(function() {
@@ -5927,6 +5959,7 @@
 
 		if (!vnode.data.show) {
 			// remove pending leave element on enter by injecting an insert hook
+			// 通过注入插入钩子移除挂起的离开元素
 			mergeVNodeHook(vnode.data.hook || (vnode.data.hook = {}), 'insert', function() {
 				var parent = el.parentNode;
 				var pendingNode = parent && parent._pending && parent._pending[vnode.key];
@@ -5940,6 +5973,7 @@
 		}
 
 		// start enter transition
+		// 开始enter过渡
 		beforeEnterHook && beforeEnterHook(el);
 		if (expectsCSS) {
 			addTransitionClass(el, startClass);
@@ -5967,6 +6001,7 @@
 		var el = vnode.elm;
 
 		// call enter callback now
+		// 调用enter回调
 		if (el._enterCb) {
 			el._enterCb.cancelled = true;
 			el._enterCb();
@@ -5998,6 +6033,7 @@
 			leave &&
 			// leave hook may be a bound method which exposes
 			// the length of original fn as _length
+			// enterhook可能是一个绑定的方法暴露了原来的fn的length为_length
 			(leave._length || leave.length) > 1;
 
 		var cb = el._leaveCb = once(function() {
@@ -6028,10 +6064,12 @@
 
 		function performLeave() {
 			// the delayed leave may have already been cancelled
+			// 这个延迟的leave可能已经被取消了。
 			if (cb.cancelled) {
 				return
 			}
 			// record leaving element
+			// 记录leave的元素
 			if (!vnode.data.show) {
 				(el.parentNode._pending || (el.parentNode._pending = {}))[vnode.key] = vnode;
 			}
@@ -6084,7 +6122,7 @@
 			appearActiveClass: (name + "-enter-active")
 		}
 	});
-
+	//返回一个只执行一次的函数
 	function once(fn) {
 		var called = false;
 		return function() {
@@ -6113,7 +6151,7 @@
 			}
 		}
 	} : {};
-
+	//插件模块
 	var platformModules = [
 		attrs,
 		klass,
@@ -6127,6 +6165,8 @@
 
 	// the directive module should be applied last, after all
 	// built-in modules have been applied.
+	// 指令模块应该最后被调用
+	// 在所有的内建模块调用之后。
 	var modules = platformModules.concat(baseModules);
 
 	var patch$1 = createPatchFunction({
@@ -6137,6 +6177,7 @@
 	/**
 	 * Not type checking this file because flow doesn't like attaching
 	 * properties to Elements.
+	 * 没有类型检查这个文件因为流不喜欢附加属性元素
 	 */
 
 	var modelableTagRE = /^input|select|textarea|vue-component-[0-9]+(-[0-9a-zA-Z_-]*)?$/;
@@ -6194,6 +6235,8 @@
 				// it's possible that the value is out-of-sync with the rendered options.
 				// detect such cases and filter out values that no longer has a matching
 				// option in the DOM.
+				// 如果由v-for渲染的options已经改变, 很有可能渲染的值是失去同步的options。
+				// 检测这种情况,过滤掉在DOM中不再匹配的options。
 				var needReset = el.multiple ? binding.value.some(function(v) {
 					return hasNoMatchingOption(v, el.options);
 				}) : binding.value !== binding.oldValue && hasNoMatchingOption(binding.value, el.options);
