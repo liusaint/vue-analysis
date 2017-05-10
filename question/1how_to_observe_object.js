@@ -27,7 +27,7 @@ Observe.prototype.defineData = function(key, val) {
 		},
 		set: function(newVal) {
 			console.log('you set ' + key + ' a new value "' + newVal + '" intead of "' + val + '"');
-
+			if (val === newVal) return;
 			val = newVal;
 		}
 	})
@@ -39,9 +39,13 @@ Observe.prototype.defineData = function(key, val) {
 
 var data = {
 	a: 1,
-	b: 2
+	b: {
+		c: 2,
+		d: 3
+	}
 };
 var ob_data = new Observe(data);
 console.log(ob_data)
 ob_data.data.a;
-ob_data.data.b = 5;
+ob_data.data.b.c = 5;
+ob_data.data.b.e = 5;
