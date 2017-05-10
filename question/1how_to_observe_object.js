@@ -9,7 +9,7 @@ Observe.prototype.walk = function(data) {
 		if (!data.hasOwnProperty(key)) {
 			continue;
 		}
-		val = data.key;
+		val = data[key];
 		if (Object.prototype.toString.call(val) == '[object Object]') {
 			new Observe(val);
 		} else {
@@ -42,5 +42,6 @@ var data = {
 	b: 2
 };
 var ob_data = new Observe(data);
-ob_data.a;
-ob_data.b = 5;
+console.log(ob_data)
+ob_data.data.a;
+ob_data.data.b = 5;
