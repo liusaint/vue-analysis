@@ -45,7 +45,26 @@ var data = {
 	}
 };
 var ob_data = new Observe(data);
-console.log(ob_data)
+
 ob_data.data.a;
 ob_data.data.b.c = 5;
 ob_data.data.b.e = 5;
+
+ob_data.data.d = 1;
+
+
+
+
+
+/*继承Array()*/
+function Arr(){
+
+}
+Arr.prototype = new Array();
+
+console.log(a = new Arr());
+
+a.push(1);
+a.push(2);
+a.push(3);
+console.log(a)
