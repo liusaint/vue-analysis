@@ -20,3 +20,67 @@ vue学习。vue源码分析。
 *  有 v-show 的元素始终会被渲染并保留在 DOM 中。v-show 只是简单地切换元素的 CSS 属性 display。
 *  v-if 是“真正”的条件渲染，因为它会确保在切换过程中条件块内的事件监听器和子组件适当地被销毁和重建。v-if 也是惰性的：如果在初始渲染时条件为假，则什么也不做——直到条件第一次变为真时，才会开始渲染条件块。
 *  v-for与v-if。v-for的优先级比较高。可以在循环的时候进行一些过滤，很方便。
+*  渲染列表。<div v-for="item in items" :key="item.id">。也尽可能要给一个key。
+*  对于已经创建的实例，Vue 不能动态添加根级别的响应式属性。
+*  数组的变异方法。数组替换。数组长度修改。
+*  v-for可以用在自定义组件上。
+* 注意这个is。todo-item是组件名字。因为ul下面li才比较合法。这样可以避免一些html解析上的错误。
+```
+<ul>
+    <li
+      is="todo-item"
+      v-for="(todo, index) in todos"
+      v-bind:key="todo.id"
+      v-bind:title="todo.title"
+      v-on:remove="todos.splice(index, 1)"
+    ></li>
+  </ul>
+```
+* 事件修饰符.stop .prevent .capture .self .once。使用修饰符时，顺序很重要；相应的代码会以同样的顺序产生。
+* 按键修饰符。.enter .tab .delete (捕获“删除”和“退格”键) .esc .space .up .down .left .right<input v-on:keyup.13="submit"><!-- 缩写语法 --> <input @keyup.enter="submit">
+* Vue.config.keyCodes.f1 = 112。全局配置。
+* v-model 会忽略所有表单元素的 value、checked、selected 特性的初始值。因为它会选择 Vue 实例数据来作为具体的值。你应该通过 JavaScript 在组件的 data 选项中声明初始值。
+* input输入的修饰符<input v-model.lazy="msg" >。.lazy（input转为change）.number　NaN的话原值。.trim
+
+#### 组件
+* 所有的 Vue 组件同时也都是 Vue 的实例，所以可接受相同的选项对象 (除了一些根级特有的选项) 并提供相同的生命周期钩子。
+* 确保在初始化根实例之前注册组件。.Vue.component('my-component', {
+  // 选项
+})
+* 局部注册 components: {// <my-component> 将只在父组件模板中可用 'my-component': Child }
+* 因为 Vue 只有在浏览器解析、规范化模板之后才能获取其内容。比如table,selet里面的内容都有限制。需要用　is="my-component"。（<script type="text/x-template">；JavaScript 内联模板字符串；.vue 组件没有这些限制
+* data为何需要是一个函数？
+* 父子组件的关系可以总结为 prop 向下传递，事件向上传递。父组件通过 prop 给子组件下发数据，子组件通过事件给父组件发送消息。
+* 组件实例的作用域是孤立的。
+* HTML 特性是不区分大小写的。所以，当使用的不是字符串模板时，camelCase (驼峰式命名) 的 prop 需要转换为相对应的 kebab-case (短横线分隔式命名)。
+* 传递数值。<!-- 传递真正的数值 --> <comp v-bind:some-prop="1"></comp>）
+* 组件内部使用props：使用props中的值得初始化data。computed变量。
+* 非 Prop 特性。会直接添加到子组件的根节点上。
+* 替换/合并现有的特性。正常的会覆盖。class和style会合并。
+* 自定义事件。https://cn.vuejs.org/v2/guide/components.html#自定义事件
+    * .sync <comp :foo="bar" @update:foo="val => bar = val"></comp>
+    * <input v-bind:value="something" v-on:input="something = $event.target.value">
+    * 自定义表单组件。
+    * 非父子组件的通信。var bus = new Vue() // 触发组件 A 中的事件 bus.$emit('id-selected', 1) // 在组件 B 创建的钩子中监听事件 bus.$on('id-selected', function (id) {// ... })
+* 使用插槽分发内容
+* 为了让组件可以组合，我们需要一种方式来混合父组件的内容与子组件自己的模板。这个过程被称为内容分发。
+    * <slot> 只有在没有要分发的内容时才会显示。 </slot>
+    * 具名插槽。<p slot="header"></p>     <slot name="header"></slot>
+    * 作用域插槽。在子组件中，只需将数据传递到插槽，就像你将 prop 传递给组件一样。
+    * <div class="child"> <slot text="hello from child"></slot> </div>
+* 动态组件 <component v-bind:is="currentView"> <!-- 组件在 vm.currentview 变化时改变！ --> </component>
+    * <keep-alive></keep-alive>
+* Vue 组件的 API 来自三部分——prop、事件和插槽：
+    * Prop 允许外部环境传递数据给组件；
+    * 事件允许从组件内触发外部环境的副作用；
+    * 插槽允许外部环境将额外的内容组合在组件中。
+* 子组件引用。parent.$refs.profile　<user-profile ref="profile"></user-profile>
+* 异步组件。与webpack配合。https://cn.vuejs.org/v2/guide/components.html#异步组件。const b1 = () => import ('@/components/b1')
+* 组件命名约定
+* 递归组件。组件在它的模板内可以递归地调用自己。
+* 组件间的循环引用。与webpack配合时的模块机制处理。
+* X-Template
+* 对低开销的静态组件使用 v-once
+
+
+#### 其他内容
