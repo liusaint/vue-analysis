@@ -59,7 +59,9 @@
 		<com1 v-bind:p_show_alert="showAlert" v-bind:p_user="usersArr" v-bind:p_input_name="input_name" v-on:changeinput="getChildMsg" :input_obj="inputObj" ref="com1"></com1>
 
 
-		
+		<ul>
+<li v-for="(v,k) in testObjChange">{{k}}:{{v}}</li>
+		</ul>
 
 	</div>
 

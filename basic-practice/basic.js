@@ -36,7 +36,11 @@ var a = new Vue({
 			id:2,
 			name:'名字2'
 		}
-		]		
+		],
+		testObjChange:{
+			a:1,
+			b:2
+		}		
 	},
 	methods:{
 		showAlert:function(nameId){
@@ -138,13 +142,21 @@ a.usersArr.push(
 
 
 const sourceOfTruth = {a:1}
-
+debugger;
 const vmA = new Vue({
   data: sourceOfTruth
 })
-
+debugger;
 const vmB = new Vue({
   data: sourceOfTruth
 })
 
-vmA.$data == vmB.$data;
+console.log(vmA.$data == vmB.$data);
+
+
+//对象的响应测试
+a.$set(a.testObjChange,'c',555);
+Vue.set(a.testObjChange, 'cd', 2);
+a.testObjChange = {aa:1,BB:2};
+a.testObjChange = [1,2,3];
+a.testObjChange = [1,2,3,]
