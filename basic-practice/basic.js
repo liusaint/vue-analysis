@@ -133,3 +133,18 @@ a.usersArr.push(
 //　函数名，不带括号。
 //　触发自定义事件可以带参数。
 //　a.$refs.com1.input_obj.input_name = 1 //ref的运用。
+//　
+//　
+
+
+const sourceOfTruth = {a:1}
+
+const vmA = new Vue({
+  data: sourceOfTruth
+})
+
+const vmB = new Vue({
+  data: sourceOfTruth
+})
+
+vmA.$data == vmB.$data;

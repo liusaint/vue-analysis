@@ -84,3 +84,15 @@ vue学习。vue源码分析。
 
 
 #### 其他内容
+* mixin 比如created这种钩子函数会被合并成数组，在组件中的created之前调用。
+* methods, components 和directives，将被混合为同一个对象。两个对象键名冲突时，取组件对象的键值对。
+* 全局mixin。Vue.mixin();
+
+* render函数
+* this.$root.$data
+* vmA.$data == vmB.$data;
+
+
+#### 一些针对性的问题的考虑。
+
+1.与传统后续如何结合。
