@@ -40,6 +40,10 @@ var a = new Vue({
 		testObjChange:{
 			a:1,
 			b:2
+		},
+		//测试this在methods中的表现和在data中的表现
+		testThisFn:function(){
+			console.log(this.radioVal);
 		}		
 	},
 	methods:{
