@@ -82,6 +82,7 @@ vue学习。vue源码分析。
 * X-Template
 * 对低开销的静态组件使用 v-once
 * vue-loader css scope的作用范围。限制到本组件内。对于子组件不起作用。以及一些引用的外部组件也没有效果。因为它的编译不会深入组件内部。一定要修改子组件。可以考虑写两个<style>标签。一个带scope一个不带。
+* vuex与v-model的配合。https://vuex.vuejs.org/zh-cn/forms.html
 
 
 #### 其他内容
@@ -97,3 +98,4 @@ vue学习。vue源码分析。
 #### 一些针对性的问题的考虑。
 
 1.与传统后续如何结合。
+2.vuex多页应用中使用。
