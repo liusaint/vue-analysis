@@ -1,3 +1,9 @@
+//工具 判断是否简单对象
+function isObject(obj) {
+	return Object.prototype.toString.call(obj) === '[object Object]'
+}
+
+
 /*dep区　begin*/
 var uid$1 = 0;
 
@@ -66,7 +72,7 @@ function popTarget() {
 /*dep区　end*/
 
 
-
+/*observe 区　begin*/
 function observe(data, isRoot) {
 	if (!isObject(data)) {
 		return;
@@ -87,10 +93,7 @@ Observe.prototype.walk = function(obj) {
 		}
 	}
 }
-//判断是否简单对象
-function isObject(obj) {
-	return Object.prototype.toString.call(obj) === '[object Object]'
-}
+
 
 Observe.prototype.defineData = function(obj, key) {
 
@@ -125,9 +128,9 @@ Observe.prototype.defineData = function(obj, key) {
 		}
 	})
 }
+/*observe 区　end*/
 
-
-/*watcher*/
+/*watcher 区　begin*/
 
 /*  */
 
@@ -345,8 +348,10 @@ Watcher.prototype.teardown = function teardown() {
 		this.active = false;
 	}
 };
+/*watcher 区　begin*/
 
-/*watcher*/
+
+
 //一个vue方法。
 function Vue(options) {
 	this.el = options.el;
