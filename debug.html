@@ -11,13 +11,18 @@
 
 <div class="a b " ></div>
 	</div>
-	<script>
 
+
+	<div id="app1">
+{{ message }}
+	</div>
+
+
+	<script>
+var obj = {message:123}
 var app = new Vue({
 	el:'#app',
-	data:{
-		message:123
-	},
+	data:obj,
 	methods:{
 		aMessage:function(){
 			//message的时候也会调用这个函数。
@@ -27,6 +32,11 @@ var app = new Vue({
 	}
 })
 
+
+var app1 = new Vue({
+	el:'#app1',
+	data:obj,
+})
 	</script>
 </body>
 </html>
