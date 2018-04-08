@@ -105,7 +105,7 @@ vue学习。vue源码分析。
 
 #### 源码
 * 执行setter时再次调用渲染函数会再次读取数据，执行get,会再次收集依赖吗?   会，但是重复的dep不会添加到watcher中。
-* 对于多个vue实例依赖同一个对象的情况。 
+* 对于多个vue实例依赖同一个对象的情况。 一个observer。dep中会放多个watcher。
 * 嵌套时的情况。 一个dep,多个watcher?
 * 生命周期
 * dep watcher observer三者的关系。
