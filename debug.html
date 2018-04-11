@@ -7,7 +7,7 @@
 <body>
 
 	<div id="app">
-{{ message }}
+{{ message }}{{message1}}
 
 <div class="a b " ></div>
 	</div>
@@ -28,6 +28,11 @@ var app = new Vue({
 			//message的时候也会调用这个函数。
 			console.log(1);
 			// return this.message+1;
+		}
+	},
+	computed:{
+		message1(){
+			return this.message+this.message;
 		}
 	}
 })
