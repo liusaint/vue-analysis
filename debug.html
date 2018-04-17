@@ -6,20 +6,23 @@
 </head>
 <body>
 
-	<div id="app">
+<!-- 	<div id="app">
 {{ message }}{{message1}}
 
 <div class="a b " ></div>
-	</div>
+	</div> -->
 
 
-	<div id="app1">
+	<div id="app">
 {{ message }}
+
+<div v-for="a in arr">{{a}}</div>
 	</div>
 
 
 	<script>
-var obj = {message:123}
+var obj = {message:123,
+arr:[1,2]}
 var app = new Vue({
 	el:'#app',
 	data:obj,
@@ -38,10 +41,10 @@ var app = new Vue({
 })
 
 
-var app1 = new Vue({
-	el:'#app1',
-	data:obj,
-})
+// var app1 = new Vue({
+// 	el:'#app1',
+// 	data:obj,
+// })
 	</script>
 </body>
 </html>

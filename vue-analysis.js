@@ -803,8 +803,10 @@
 			var arguments$1 = arguments;
 
 			// avoid leaking arguments:
-			// 避免泄露参数???
+			// 不幸的是，传递arguments给任何参数，将导致Chrome和Node中使用的V8引擎跳过对其的优化，这也将使性能相当慢。
 			// http://jsperf.com/closure-with-arguments
+			// https://segmentfault.com/q/1010000010013708
+			// 
 			var i = arguments.length;
 			var args = new Array(i);
 			while (i--) {
