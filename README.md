@@ -123,3 +123,8 @@ vue学习。vue源码分析。
 适用计算属性的情况：1.多个属性的变化，引起同一个属性的变化。
 适用watch的情况：1。异步操作。耗时操作。
 适用方法：计算属性是基于它们的依赖进行缓存的，最好是纯函数。非纯函数可以用方法。
+2.v-if与v-seen。 生命周期上会有什么不同。
+3.v-for i in n范围。v-for on a <template>，渲染多个元素，如li。
+4.事件处理。v-on:click @click @click.stop  .stop .prevent .capture .self .once 顺序。config.keyCodes。@keyup.enter　　@keyup.alt.67　@click.ctrl　@click.ctrl.exact
+5.表单。v-model.会忽略selected,checked,value等以及textarea中间的值。2复选框的true-value false-value。　3.v-model的本质是什么，与自定义组件的关系。4.v-model　与:value="a"这种配合使用的情况。5.修饰符。v-model.lazy .number .trim
+6.组件。1.局部组件。2.dom的限制。table,ul等<script type="text/x-template">JavaScript 内联模板字符串　.vue 组件。3.data必须为函数？是组件的？为什么要是函数？返回同一个data　ok不ok?4.camelCase vs. kebab-case。5.v-bind='obj'这种不带参数的prop。相当于把对象解构后分发下去的。6.prop的单向。内部要使用修改呢？计算属性。初始一个内部data。7.非 Prop 特性。data-3d-date-picker。一定要加data?出现在根元素。
