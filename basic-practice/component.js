@@ -1,7 +1,7 @@
 
 Vue.component('hello',
 {
-	template:'<div><p><slot name="slot1"></slot></p>{{msg}}<slot name="slot2"></slot></div>',
+	template:'<div><p><slot name="slot3"></slot><slot name="slot1"></slot></p>{{msg}}<slot name="slot2"></slot></div>',
 	data:function(){
 		var data = {
 			msg:'hello,world!'

@@ -1,5 +1,7 @@
 <template>
   <div id="app">
+    <router-link to="/slot">slotScope</router-link>
+    <router-link to="/">index</router-link>
     <router-view/>
   </div>
 </template>

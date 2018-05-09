@@ -9,8 +9,13 @@
 	<div id="p1">
 		<h5>title</h5>
 
-		<hello><p slot="slot1">这里的东西会放在slot里面,slot1</p><p slot="slot2">这里的东西会放在slot里面,slot2</p></hello>
-		<partcom></partcom>
+		<hello>
+			<p slot="slot1">这里的东西会放在slot里面,slot1</p>
+			<p slot="slot2">这里的东西会放在slot里面,slot2</p>
+			<partcom　slot="slot3"></partcom>
+
+		</hello>
+
 
 		<div>动态组件</div>
 		<component v-bind:is="currentView">
