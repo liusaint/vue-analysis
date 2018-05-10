@@ -132,7 +132,11 @@ vue学习。vue源码分析。
   v-on:input="something = $event.target.value">11.自定义表单的配置。  model: {
     prop: 'checked',
     event: 'change'
-  }11.作用域插槽。
+  }11.作用域插槽。12.可复用组件，props,event,插槽。Prop 允许外部环境传递数据给组件； 事件允许从组件内触发外部环境的副作用； 插槽允许外部环境将额外的内容组合在组件中。 13.parent.$refs.profile　　14.异步组件。vue的异步组件是如何配合webpack的，原理是什么？15.组件命名属性。html中请使用-。 PascalCase 是最通用的声明约定而 kebab-case 是最通用的使用约定。16.递归组件。有终止条件。17.循环引用与webpack。要告知编译工具，beforeCreate中引用。。。
+
 7.vue-router的实现原理。
 8.h()。
 9.keep-alive。的生命周期。
+10.指令，以及指令的参数和钩子函数。
+11.过滤器。
+12.插件。作用？写法？添加全局功能有哪些方式。　插件包含了install方法。把全局功能放在这个方法里。使用vue.use的时候就会运行这些。让这些全局功能能作用。use可以传入option。
