@@ -140,3 +140,23 @@ vue学习。vue源码分析。
 10.指令，以及指令的参数和钩子函数。
 11.过滤器。
 12.插件。作用？写法？添加全局功能有哪些方式。　插件包含了install方法。把全局功能放在这个方法里。使用vue.use的时候就会运行这些。让这些全局功能能作用。use可以传入option。
+
+
+
+
+
+
+
+VUEX方法
+1.关于异步。
+2.大型项目中的store如何管理。文件如何组织。
+3.store中的值如果给input怎么处理。
+4.vuex与redux的不同在哪。
+5.vue如何合并对一个状态的修改的？
+6.单一状态树与模块化。如何将状态和状态变更事件分布到各个子模块中。
+7.store中的值放到组件中，使用compute属性。为了简单，有了mapstate。
+8.getters。已有的state派生出一些状态。属性访问。方法访问。以及mapGetters。　　对比直接在组件中使用计算属性好在哪里？有多个组件需要用到此属性时不用到处复制同样的代码。
+9.Mutation。　（state,playload）。正常提交方式与对象风格的提交方式。　使用常量做事件类型名。　常量放在单独的文件中可以让你的代码合作者对整个 app 包含的 mutation 一目了然。this.$store.commit('xxx') 提交 mutation，或者使用 mapMutations 辅助函数将组件中的 methods 映射为 store.commit 调用。　必须是同步函数，因为不会立即修改状态，导致难以追踪。
+10.actions。　context。　actions中分发mutation。　组件中调用action：　store.dispatch()
+mapActions 
+11.module。　这个挺重要。　命名空间。　局部状态与根状态的切换。　命名空间的简单化使用。
