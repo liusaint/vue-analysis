@@ -119,28 +119,51 @@ vue学习。vue源码分析。
 
 
 ### 问题
-1.计算属性 vs 侦听属性，方法？使用和实现上有什么不同。计算属性的setter。
+* 1.计算属性 vs 侦听属性，方法？使用和实现上有什么不同。计算属性的setter。
 适用计算属性的情况：1.多个属性的变化，引起同一个属性的变化。
 适用watch的情况：1。异步操作。耗时操作。
 适用方法：计算属性是基于它们的依赖进行缓存的，最好是纯函数。非纯函数可以用方法。
-2.v-if与v-seen。 生命周期上会有什么不同。
-3.v-for i in n范围。v-for on a <template>，渲染多个元素，如li。
-4.事件处理。v-on:click @click @click.stop  .stop .prevent .capture .self .once 顺序。config.keyCodes。@keyup.enter　　@keyup.alt.67　@click.ctrl　@click.ctrl.exact
-5.表单。v-model.会忽略selected,checked,value等以及textarea中间的值。2复选框的true-value false-value。　3.v-model的本质是什么，与自定义组件的关系。4.v-model　与:value="a"这种配合使用的情况。5.修饰符。v-model.lazy .number .trim
-6.组件。1.局部组件。2.dom的限制。table,ul等<script type="text/x-template">JavaScript 内联模板字符串　.vue 组件。3.data必须为函数？是组件的？为什么要是函数？返回同一个data　ok不ok?4.camelCase vs. kebab-case。5.v-bind='obj'这种不带参数的prop。相当于把对象解构后分发下去的。6.prop的单向。内部要使用修改呢？计算属性。初始一个内部data。7.非 Prop 特性。data-3d-date-picker。一定要加data?出现在根元素。8.不能用 $on 侦听子组件释放的事件，而必须在模板里直接用 v-on 绑定，参见下面的例子。9.原生事件。v-on:click.native。10.<comp :foo.sync="bar"></comp>10.自定义表单。<input
+* 2.v-if与v-seen。 生命周期上会有什么不同。
+* 3.v-for i in n范围。v-for on a <template>，渲染多个元素，如li。
+* 4.事件处理。v-on:click @click @click.stop  .stop .prevent .capture .self .once 顺序。config.keyCodes。@keyup.enter　　@keyup.alt.67　@click.ctrl　@click.ctrl.exact
+* 5.表单。
+    * 1.v-model.会忽略selected,checked,value等以及textarea中间的值。
+    * 2复选框的true-value false-value。　
+    * 3.v-model的本质是什么，与自定义组件的关系。
+    * 4.v-model　与:value="a"这种配合使用的情况。
+    * 5.修饰符。v-model.lazy .number .trim
+* 6.组件。
+    * 1.局部组件。
+    * 2.dom的限制。table,ul等<script type="text/x-template">JavaScript 内联模板字符串　.vue 组件。
+    * 3.data必须为函数？是组件的？为什么要是函数？返回同一个data　ok不ok?
+    * 4.camelCase vs. kebab-case。
+    * 5.v-bind='obj'这种不带参数的prop。相当于把对象解构后分发下去的。
+    * 6.prop的单向。内部要使用修改呢？计算属性。初始一个内部data。
+    * 7.非 Prop 特性。data-3d-date-picker。一定要加data?出现在根元素。
+    * 8.不能用 $on 侦听子组件释放的事件，而必须在模板里直接用 v-on 绑定，参见下面的例子。
+    * 9.原生事件。v-on:click.native。
+    * 10.<comp :foo.sync="bar"></comp>
+    * 10.自定义表单。<input
   v-bind:value="something"
-  v-on:input="something = $event.target.value">11.自定义表单的配置。  model: {
+  v-on:input="something = $event.target.value">
+    * 11.自定义表单的配置。  model: {
     prop: 'checked',
     event: 'change'
-  }11.作用域插槽。12.可复用组件，props,event,插槽。Prop 允许外部环境传递数据给组件； 事件允许从组件内触发外部环境的副作用； 插槽允许外部环境将额外的内容组合在组件中。 13.parent.$refs.profile　　14.异步组件。vue的异步组件是如何配合webpack的，原理是什么？15.组件命名属性。html中请使用-。 PascalCase 是最通用的声明约定而 kebab-case 是最通用的使用约定。16.递归组件。有终止条件。17.循环引用与webpack。要告知编译工具，beforeCreate中引用。。。
+  }
+    * 12.作用域插槽。
+    * 12.可复用组件，props,event,插槽。Prop 允许外部环境传递数据给组件； 事件允许从组件内触发外部环境的副作用； 插槽允许外部环境将额外的内容组合在组件中。 * * 13.parent.$refs.profile　　
+    * 14.异步组件。vue的异步组件是如何配合webpack的，原理是什么？
+    * 15.组件命名属性。html中请使用-。 PascalCase 是最通用的声明约定而 kebab-case 是最通用的使用约定。
+    * 16.递归组件。有终止条件。
+    * 17.循环引用与webpack。要告知编译工具，beforeCreate中引用。。。
 
-7.vue-router的实现原理。
-8.h()。
-9.keep-alive。的生命周期。
-10.指令，以及指令的参数和钩子函数。
-11.过滤器。
-12.插件。作用？写法？添加全局功能有哪些方式。　插件包含了install方法。把全局功能放在这个方法里。使用vue.use的时候就会运行这些。让这些全局功能能作用。use可以传入option。
-13.vue中同一个属性的修改有没有去重的操作。就是说先修改成a,再修改成b会render多少次呢。
+* 7.vue-router的实现原理。
+* 8.h()。
+* 9.keep-alive。的生命周期。
+* 10.指令，以及指令的参数和钩子函数。
+* 11.过滤器。
+* 12.插件。作用？写法？添加全局功能有哪些方式。　插件包含了install方法。把全局功能放在这个方法里。使用vue.use的时候就会运行这些。让这些全局功能能作用。use可以传入option。
+* 13.vue中同一个属性的修改有没有去重的操作。就是说先修改成a,再修改成b会render多少次呢。
 
 
 
@@ -149,15 +172,15 @@ vue学习。vue源码分析。
 
 
 VUEX方法
-1.关于异步。
-2.大型项目中的store如何管理。文件如何组织。
-3.store中的值如果给input怎么处理。
-4.vuex与redux的不同在哪。
-5.vue如何合并对一个状态的修改的？
-6.单一状态树与模块化。如何将状态和状态变更事件分布到各个子模块中。
-7.store中的值放到组件中，使用compute属性。为了简单，有了mapstate。
-8.getters。已有的state派生出一些状态。属性访问。方法访问。以及mapGetters。　　对比直接在组件中使用计算属性好在哪里？有多个组件需要用到此属性时不用到处复制同样的代码。
-9.Mutation。　（state,playload）。正常提交方式与对象风格的提交方式。　使用常量做事件类型名。　常量放在单独的文件中可以让你的代码合作者对整个 app 包含的 mutation 一目了然。this.$store.commit('xxx') 提交 mutation，或者使用 mapMutations 辅助函数将组件中的 methods 映射为 store.commit 调用。　必须是同步函数，因为不会立即修改状态，导致难以追踪。
-10.actions。　context。　actions中分发mutation。　组件中调用action：　store.dispatch()
+* 1.关于异步。
+* 2.大型项目中的store如何管理。文件如何组织。
+* 3.store中的值如果给input怎么处理。
+* 4.vuex与redux的不同在哪。
+* 5.vue如何合并对一个状态的修改的？
+* 6.单一状态树与模块化。如何将状态和状态变更事件分布到各个子模块中。
+* 7.store中的值放到组件中，使用compute属性。为了简单，有了mapstate。
+* 8.getters。已有的state派生出一些状态。属性访问。方法访问。以及mapGetters。　　对比直接在组件中使用计算属性好在哪里？有多个组件需要用到此属性时不用到处复制同样的代码。
+* 9.Mutation。　（state,playload）。正常提交方式与对象风格的提交方式。　使用常量做事件类型名。　常量放在单独的文件中可以让你的代码合作者对整个 app 包含的 mutation 一目了然。this.$store.commit('xxx') 提交 mutation，或者使用 mapMutations 辅助函数将组件中的 methods 映射为 store.commit 调用。　必须是同步函数，因为不会立即修改状态，导致难以追踪。
+* 10.actions。　context。　actions中分发mutation。　组件中调用action：　store.dispatch()
 mapActions 
-11.module。　这个挺重要。　命名空间。　局部状态与根状态的切换。　命名空间的简单化使用。
+* 11.module。　这个挺重要。　命名空间。　局部状态与根状态的切换。　命名空间的简单化使用。
